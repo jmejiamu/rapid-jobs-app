@@ -60,4 +60,15 @@ export const styles = StyleSheet.create({
     color: colors.surface,
     fontWeight: "500",
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerText: {
+    fontSize: fontSize.lg,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginVertical: 16,
+  },
 });
