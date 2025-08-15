@@ -1,17 +1,20 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import BottomTabNavigator from "./BottomTabNavigator";
+import RootNavigator from "./RootNavigator";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../redux/store";
+import { OnboardingProvider } from "../hooks/useOnboarding";
 
 export default function AppNavigator() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <BottomTabNavigator />
-        </NavigationContainer>
+        <OnboardingProvider>
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+        </OnboardingProvider>
       </PersistGate>
     </Provider>
   );
