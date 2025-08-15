@@ -1,7 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../theme/colors";
+import { fontSize } from "../../theme/fontStyle";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 interface OnboardingCardProps {
   title: string;
@@ -12,17 +14,13 @@ interface OnboardingCardProps {
 export const OnboardingCard: React.FC<OnboardingCardProps> = ({
   title,
   description,
-  children
+  children,
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        {children && (
-          <View style={styles.imageContainer}>
-            {children}
-          </View>
-        )}
-        
+        {children && <View style={styles.imageContainer}>{children}</View>}
+
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
@@ -36,40 +34,40 @@ const styles = StyleSheet.create({
   container: {
     width,
     height: height * 0.7,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 24,
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     maxWidth: 320,
   },
   imageContainer: {
     width: 200,
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 40,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.background,
     borderRadius: 20,
   },
   textContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1C1C1E',
-    textAlign: 'center',
+    fontSize: fontSize.xl,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    textAlign: "center",
     marginBottom: 16,
     lineHeight: 34,
   },
   description: {
-    fontSize: 16,
-    color: '#8E8E93',
-    textAlign: 'center',
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    textAlign: "center",
     lineHeight: 22,
     paddingHorizontal: 16,
   },

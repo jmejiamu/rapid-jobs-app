@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { colors } from "../../theme/colors";
 
 interface ProgressIndicatorProps {
   totalSteps: number;
@@ -11,8 +12,8 @@ interface ProgressIndicatorProps {
 export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   totalSteps,
   currentStep,
-  activeColor = '#007AFF',
-  inactiveColor = '#E5E5E7'
+  activeColor = colors.primary,
+  inactiveColor = colors.background,
 }) => {
   return (
     <View style={styles.container}>
@@ -22,8 +23,9 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
           style={[
             styles.dot,
             {
-              backgroundColor: index === currentStep ? activeColor : inactiveColor,
-            }
+              backgroundColor:
+                index === currentStep ? activeColor : inactiveColor,
+            },
           ]}
         />
       ))}
@@ -33,9 +35,9 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 20,
   },
   dot: {
