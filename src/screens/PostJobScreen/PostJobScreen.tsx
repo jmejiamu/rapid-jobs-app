@@ -16,10 +16,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import CustomInput from "@/src/components/CustomInput/CustomInput";
+import { PostJobType } from "@/src/types/postjob";
 import * as ImagePicker from "expo-image-picker";
 import { MainButton } from "@/src/components";
-import { FormData, schema } from "./schema/formSchema";
+import { schema } from "./schema/formSchema";
 import { styles } from "./styles/styles";
+import { API_URL } from "@/config/api";
 
 const PostJobScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -28,7 +30,7 @@ const PostJobScreen = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<PostJobType>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: "",
@@ -50,8 +52,26 @@ const PostJobScreen = () => {
     }
   };
 
-  const onSubmit = (data: FormData) => {
-    Alert.alert("Job Data", JSON.stringify({ ...data, images }, null, 2));
+  const onSubmit = async (data: PostJobType) => {
+    const body = {
+      title: data.title,
+      pay: data.pay,
+      address: data.address,
+      description: data.description,
+    };
+    try {
+      const response = await fetch(`${API_URL}/jobs/create-job`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error("Failed to post job");
+      // Optionally get the posted job data
+      // const job = await response.json();
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert("Error", "Failed to post job");
+    }
   };
 
   return (
@@ -96,6 +116,7 @@ const PostJobScreen = () => {
           />
 
           <Text style={styles.label}>Upload Images (max 4)</Text>
+          {/* TODO: Implement image upload, make this reusable */}
           <View style={styles.imageGrid}>
             {[0, 1].map((row) => (
               <View key={row} style={styles.imageRow}>
