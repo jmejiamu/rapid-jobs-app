@@ -1,19 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   FlatList,
-  Dimensions,
-  Text,
   StatusBar,
-} from 'react-native';
-import LottieView from 'lottie-react-native';
-import { OnboardingCard, OnboardingButton, ProgressIndicator } from '../../components/onboarding';
-import { translate } from '../../translation/i18n';
-import { OnboardingSlide } from '../../types/onboarding';
-
-const { width } = Dimensions.get('window');
+} from "react-native";
+import LottieView from "lottie-react-native";
+import { OnboardingCard, ProgressIndicator } from "../../components/onboarding";
+import { translate } from "../../translation/i18n";
+import { OnboardingSlide } from "../../types/onboarding";
+import { MainButton } from "@/src/components";
 
 interface OnboardingScreenProps {
   onComplete: () => void;
@@ -26,31 +23,31 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const slides: OnboardingSlide[] = [
     {
       id: 1,
-      title: translate('onboarding.slide1.title'),
-      description: translate('onboarding.slide1.description'),
-      buttonText: translate('onboarding.buttons.getStarted'),
-      image: require('../../../assets/Welcome Animation.json'),
+      title: translate("onboarding.slide1.title"),
+      description: translate("onboarding.slide1.description"),
+      buttonText: translate("onboarding.buttons.getStarted"),
+      image: require("../../../assets/Welcome Animation.json"),
     },
     {
       id: 2,
-      title: translate('onboarding.slide2.title'),
-      description: translate('onboarding.slide2.description'),
-      buttonText: translate('onboarding.buttons.next'),
-      image: require('../../../assets/Location Pin Animation.json'),
+      title: translate("onboarding.slide2.title"),
+      description: translate("onboarding.slide2.description"),
+      buttonText: translate("onboarding.buttons.next"),
+      image: require("../../../assets/Location Pin Animation.json"),
     },
     {
       id: 3,
-      title: translate('onboarding.slide3.title'),
-      description: translate('onboarding.slide3.description'),
-      buttonText: translate('onboarding.buttons.next'),
-      image: require('../../../assets/Job Search Animation.json'),
+      title: translate("onboarding.slide3.title"),
+      description: translate("onboarding.slide3.description"),
+      buttonText: translate("onboarding.buttons.next"),
+      image: require("../../../assets/Job Search Animation.json"),
     },
     {
       id: 4,
-      title: translate('onboarding.slide4.title'),
-      description: translate('onboarding.slide4.description'),
-      buttonText: translate('onboarding.buttons.letsGetStarted'),
-      image: require('../../../assets/Success Animation Lottie.json'),
+      title: translate("onboarding.slide4.title"),
+      description: translate("onboarding.slide4.description"),
+      buttonText: translate("onboarding.buttons.letsGetStarted"),
+      image: require("../../../assets/Success Animation Lottie.json"),
     },
   ];
 
@@ -96,10 +93,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
+
       <View style={styles.header}>
-        <OnboardingButton
-          title={translate('onboarding.buttons.skip')}
+        <MainButton
+          title={translate("onboarding.buttons.skip")}
           variant="text"
           onPress={handleSkip}
           style={styles.skipButton}
@@ -124,9 +121,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           totalSteps={slides.length}
           currentStep={currentIndex}
         />
-        
+
         <View style={styles.buttonContainer}>
-          <OnboardingButton
+          <MainButton
             title={slides[currentIndex].buttonText}
             onPress={handleNext}
             style={styles.nextButton}
@@ -140,18 +137,18 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
     paddingHorizontal: 24,
     paddingTop: 16,
   },
   skipButton: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    minHeight: 'auto',
+    minHeight: "auto",
   },
   flatList: {
     flex: 1,
@@ -164,7 +161,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   nextButton: {
-    width: '100%',
+    width: "100%",
   },
   lottieAnimation: {
     width: 200,

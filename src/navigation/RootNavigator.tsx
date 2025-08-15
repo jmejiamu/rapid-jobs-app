@@ -1,12 +1,14 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import OnboardingScreen from '../screens/OnboardingScreen/OnboardingScreen';
-import BottomTabNavigator from './BottomTabNavigator';
-import { useOnboarding } from '../hooks/useOnboarding';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import OnboardingScreen from "../screens/OnboardingScreen/OnboardingScreen";
+import BottomTabNavigator from "./BottomTabNavigator";
+import { useOnboarding } from "../hooks/useOnboarding";
+import PostJobScreen from "../screens/PostJobScreen/PostJobScreen";
 
 export type RootStackParamList = {
   Onboarding: undefined;
   MainApp: undefined;
+  PostJob: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -35,10 +37,10 @@ const RootNavigator: React.FC = () => {
           )}
         </Stack.Screen>
       ) : (
-        <Stack.Screen
-          name="MainApp"
-          component={BottomTabNavigator}
-        />
+        <>
+          <Stack.Screen name="MainApp" component={BottomTabNavigator} />
+          <Stack.Screen name="PostJob" component={PostJobScreen} />
+        </>
       )}
     </Stack.Navigator>
   );
