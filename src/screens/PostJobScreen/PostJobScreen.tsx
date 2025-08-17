@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,16 +9,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import CustomInput from "@/src/components/CustomInput/CustomInput";
+import {
+  ImageObject,
+  ImagePickerModal,
+  ImageUploader,
+  MainButton,
+} from "@/src/components";
 import { PostJobType } from "@/src/types/postjob";
-import * as ImagePicker from "expo-image-picker";
-import { MainButton } from "@/src/components";
 import { schema } from "./schema/formSchema";
 import { styles } from "./styles/styles";
 import { API_URL } from "@/config/api";
 
 const PostJobScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageObject[]>([]);
+  console.log("🚀 ~ PostJobScreen ~ images:", JSON.stringify(images, null, 2));
+  const [modalVisible, setModalVisible] = useState(false);
+  //TODO: Refactor this later
+  const [loadingImages, setLoadingImages] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
   const {
     control,
     handleSubmit,
@@ -39,18 +47,6 @@ const PostJobScreen = () => {
       description: "",
     },
   });
-
-  const pickImage = async () => {
-    if (images.length >= 4) return;
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      setImages([...images, result.assets[0].uri]);
-    }
-  };
 
   const onSubmit = async (data: PostJobType) => {
     const body = {
@@ -116,53 +112,77 @@ const PostJobScreen = () => {
           />
 
           <Text style={styles.label}>Upload Images (max 4)</Text>
-          {/* TODO: Implement image upload, make this reusable */}
-          <View style={styles.imageGrid}>
-            {[0, 1].map((row) => (
-              <View key={row} style={styles.imageRow}>
-                {[0, 1].map((col) => {
-                  const idx = row * 2 + col;
-                  if (images[idx]) {
-                    return (
-                      <View key={idx} style={styles.imageThumbWrapper}>
-                        <Image
-                          source={{ uri: images[idx] }}
-                          style={styles.imageThumb}
-                        />
-                        <TouchableOpacity
-                          style={styles.deleteButton}
-                          onPress={() => {
-                            setImages(images.filter((_, i) => i !== idx));
-                          }}
-                        >
-                          <Text style={styles.deleteText}>×</Text>
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  } else if (images.length < 4 && idx === images.length) {
-                    return (
-                      <TouchableOpacity
-                        key={idx}
-                        style={styles.imageUpload}
-                        onPress={pickImage}
-                      >
-                        <Text style={styles.uploadText}>+</Text>
-                      </TouchableOpacity>
-                    );
-                  } else {
-                    return (
-                      <View key={idx} style={styles.imageThumbPlaceholder} />
-                    );
-                  }
-                })}
-              </View>
+          <View style={{ flexDirection: "row" }}>
+            {[0, 1].map((index) => (
+              <ImageUploader
+                key={index}
+                image={images[index]}
+                setModalVisible={() => {
+                  setSelectedIndex(index);
+                  setModalVisible(true);
+                }}
+                loadingImage={loadingImages[index]}
+                setLoadingImage={(loading) => {
+                  setLoadingImages((prev) => {
+                    const updated = [...prev];
+                    updated[index] = loading;
+                    return updated;
+                  });
+                }}
+                stylesContainer={index === 0 ? { marginRight: 12 } : {}}
+              />
             ))}
           </View>
+          <View style={{ flexDirection: "row" }}>
+            {[2, 3].map((index) => (
+              <ImageUploader
+                key={index}
+                image={images[index]}
+                setModalVisible={() => {
+                  setSelectedIndex(index);
+                  setModalVisible(true);
+                }}
+                loadingImage={loadingImages[index]}
+                setLoadingImage={(loading) => {
+                  setLoadingImages((prev) => {
+                    const updated = [...prev];
+                    updated[index] = loading;
+                    return updated;
+                  });
+                }}
+                stylesContainer={index === 2 ? { marginRight: 12 } : {}}
+              />
+            ))}
+          </View>
+
           <View style={{ marginBottom: 50 }}>
             <MainButton title="Post Job" onPress={handleSubmit(onSubmit)} />
           </View>
         </ScrollView>
       </View>
+
+      <ImagePickerModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        onImagePicked={(newImage) => {
+          if (selectedIndex !== null) {
+            setImages((prev) => {
+              const updated = [...prev];
+              updated[selectedIndex] = newImage;
+              return updated;
+            });
+          }
+        }}
+        setLoadingImage={(loading) => {
+          if (selectedIndex !== null) {
+            setLoadingImages((prev) => {
+              const updated = [...prev];
+              updated[selectedIndex] = loading;
+              return updated;
+            });
+          }
+        }}
+      />
     </SafeAreaView>
   );
 };
