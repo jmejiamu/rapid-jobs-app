@@ -9,12 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import CustomInput from "@/src/components/CustomInput/CustomInput";
-import {
-  ImageObject,
-  ImagePickerModal,
-  ImageUploader,
-  MainButton,
-} from "@/src/components";
+import { ImagePickerModal, ImageUploader, MainButton } from "@/src/components";
+import { ImageObject } from "@/src/types/imgUploader";
 import { PostJobType } from "@/src/types/postjob";
 import { schema } from "./schema/formSchema";
 import { styles } from "./styles/styles";
@@ -23,7 +19,6 @@ import { API_URL } from "@/config/api";
 const PostJobScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [images, setImages] = useState<ImageObject[]>([]);
-  console.log("🚀 ~ PostJobScreen ~ images:", JSON.stringify(images, null, 2));
   const [modalVisible, setModalVisible] = useState(false);
   //TODO: Refactor this later
   const [loadingImages, setLoadingImages] = useState<boolean[]>([
@@ -54,6 +49,7 @@ const PostJobScreen = () => {
       pay: data.pay,
       address: data.address,
       description: data.description,
+      images: images,
     };
     try {
       const response = await fetch(`${API_URL}/jobs/create-job`, {
@@ -168,8 +164,23 @@ const PostJobScreen = () => {
           if (selectedIndex !== null) {
             setImages((prev) => {
               const updated = [...prev];
-              updated[selectedIndex] = newImage;
-              return updated;
+              // If slot is empty, insert image
+              if (!updated[selectedIndex]) {
+                updated[selectedIndex] = newImage;
+                return updated;
+              } else {
+                // Replace image at index
+                updated[selectedIndex] = newImage;
+                return updated;
+              }
+            });
+          } else {
+            // If no index selected, append to end (up to 4)
+            setImages((prev) => {
+              if (prev.length < 4) {
+                return [...prev, newImage];
+              }
+              return prev;
             });
           }
         }}

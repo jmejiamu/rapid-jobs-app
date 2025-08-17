@@ -38,4 +38,26 @@ export const styles = StyleSheet.create({
     color: colors.info,
     textAlign: "right",
   },
+  // Image
+  rowContainer: {
+    flexDirection: "row",
+    marginVertical: 10,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    marginRight: 15,
+    borderRadius: 8,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.7)",
+  },
+  modalImg: {
+    width: 300,
+    height: 300,
+    borderRadius: 12,
+  },
 });

@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Image,
   StyleProp,
   StyleSheet,
   Text,
@@ -9,16 +8,11 @@ import {
   ViewStyle,
 } from "react-native";
 import React from "react";
+import { Image } from "expo-image";
 
 import { fontSize } from "@/src/theme/fontStyle";
 import { colors } from "@/src/theme/colors";
-
-export interface ImageObject {
-  filename: string;
-  original: string;
-  sm: string;
-  lg: string;
-}
+import { ImageObject } from "@/src/types/imgUploader";
 
 interface ImageUploaderProps {
   image?: ImageObject;
