@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Alert,
   Modal,
@@ -10,7 +10,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 import { API_URL } from "@/config/api";
-import { ImageObject } from "../ImageUploader";
+import { ImageObject } from "@/src/types/imgUploader";
 
 interface ImagePickerProps {
   modalVisible: boolean;
@@ -44,7 +44,7 @@ export const ImagePickerModal = (props: ImagePickerProps) => {
     const imageToUpload: any = {
       uri,
       type: "image/jpeg",
-      name: "image.jpg",
+      name: `image_${Date.now()}.jpg`,
     };
     formData.append("images", imageToUpload);
 
