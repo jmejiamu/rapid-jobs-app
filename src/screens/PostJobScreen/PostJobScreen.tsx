@@ -8,8 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import CustomInput from "@/src/components/CustomInput/CustomInput";
 import { ImagePickerModal, ImageUploader, MainButton } from "@/src/components";
+import CustomInput from "@/src/components/CustomInput/CustomInput";
 import { ImageObject } from "@/src/types/imgUploader";
 import { PostJobType } from "@/src/types/postjob";
 import { schema } from "./schema/formSchema";
@@ -66,6 +66,27 @@ const PostJobScreen = () => {
     }
   };
 
+  const handleModal = (index: number) => {
+    setSelectedIndex(index);
+    setModalVisible(true);
+  };
+
+  const handleLoading = (index: number, loading: boolean) => {
+    setLoadingImages((prev) => {
+      const updated = [...prev];
+      updated[index] = loading;
+      return updated;
+    });
+  };
+
+  const handleDelete = (index: number) => {
+    setImages((prev) => {
+      const updated = [...prev];
+      updated.splice(index, 1);
+      return updated;
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ marginHorizontal: 16 }}>
@@ -113,19 +134,15 @@ const PostJobScreen = () => {
               <ImageUploader
                 key={index}
                 image={images[index]}
-                setModalVisible={() => {
-                  setSelectedIndex(index);
-                  setModalVisible(true);
-                }}
+                setModalVisible={() => handleModal(index)}
                 loadingImage={loadingImages[index]}
                 setLoadingImage={(loading) => {
-                  setLoadingImages((prev) => {
-                    const updated = [...prev];
-                    updated[index] = loading;
-                    return updated;
-                  });
+                  handleLoading(index, loading);
                 }}
                 stylesContainer={index === 0 ? { marginRight: 12 } : {}}
+                onDeleteImage={() => {
+                  handleDelete(index);
+                }}
               />
             ))}
           </View>
@@ -134,19 +151,15 @@ const PostJobScreen = () => {
               <ImageUploader
                 key={index}
                 image={images[index]}
-                setModalVisible={() => {
-                  setSelectedIndex(index);
-                  setModalVisible(true);
-                }}
+                setModalVisible={() => handleModal(index)}
                 loadingImage={loadingImages[index]}
                 setLoadingImage={(loading) => {
-                  setLoadingImages((prev) => {
-                    const updated = [...prev];
-                    updated[index] = loading;
-                    return updated;
-                  });
+                  handleLoading(index, loading);
                 }}
                 stylesContainer={index === 2 ? { marginRight: 12 } : {}}
+                onDeleteImage={() => {
+                  handleDelete(index);
+                }}
               />
             ))}
           </View>

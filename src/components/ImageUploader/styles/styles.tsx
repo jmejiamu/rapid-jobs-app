@@ -1,0 +1,80 @@
+import { StyleSheet } from "react-native";
+
+import { colors } from "@/src/theme/colors";
+import { fontSize } from "@/src/theme/fontStyle";
+
+export const styles = StyleSheet.create({
+  loaderOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.5)",
+    zIndex: 2,
+  },
+  imageRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    gap: 8,
+  },
+  imageThumb: {
+    height: 150,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.textSecondary,
+    backgroundColor: colors.surface,
+  },
+  imageThumbPlaceholder: {
+    flex: 1,
+    aspectRatio: 1,
+    maxWidth: "50%",
+    borderRadius: 12,
+    backgroundColor: colors.background,
+  },
+  deleteButton: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    backgroundColor: colors.error,
+    borderBottomEndRadius: 12,
+    borderTopStartRadius: 5,
+    width: 40,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+  },
+  imageGrid: {
+    marginBottom: 20,
+    flex: 1,
+  },
+  deleteText: {
+    color: colors.surface,
+    fontSize: fontSize.md,
+    fontWeight: "bold",
+    lineHeight: 24,
+    textAlign: "center",
+  },
+  imageUpload: {
+    height: 150,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.surface,
+  },
+  uploadText: {
+    fontSize: fontSize.xl,
+    color: colors.primary,
+    fontWeight: "bold",
+  },
+});
