@@ -4,3 +4,4 @@ export * from "./CustomInput";
 export * from "./JobCard";
 export * from "./ImageUploader";
 export * from "./ImagePickerModal";
+export * from "./CameraShutter";
