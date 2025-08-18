@@ -1,16 +1,14 @@
 import React from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Modal, Text, TouchableOpacity, View } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 import * as ImagePicker from "expo-image-picker";
 
-import { API_URL } from "@/config/api";
 import { ImageObject } from "@/src/types/imgUploader";
+import { colors } from "@/src/theme/colors";
+import { MainButton } from "../MainButton";
+import { styles } from "./styles/styles";
+import { API_URL } from "@/config/api";
 
 interface ImagePickerProps {
   modalVisible: boolean;
@@ -54,7 +52,6 @@ export const ImagePickerModal = (props: ImagePickerProps) => {
         body: formData,
       });
       const data = await response.json();
-      console.log("🚀 ~ handleImageUpload ~ data:", data);
       if (data.images && data.images.length > 0) {
         onImagePicked(data.images[0]);
       }
@@ -76,62 +73,41 @@ export const ImagePickerModal = (props: ImagePickerProps) => {
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>Select Image Source</Text>
-          <TouchableOpacity style={styles.button} onPress={pickImage}>
-            <Text style={styles.buttonText}>Gallery</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setModalVisible(false); /* TODO: Add camera picker logic here */
-            }}
-          >
-            <Text style={styles.buttonText}>Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.cancelButton}
+          <View style={styles.rowContainer}>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity style={styles.button} onPress={pickImage}>
+                <View style={{ alignItems: "center" }}>
+                  <AntDesign name="picture" size={40} color="black" />
+                  <Text style={styles.buttonText}>Gallery</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={{ margin: 10 }} />
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setModalVisible(
+                    false
+                  ); /* TODO: Add camera picker logic here */
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Feather name="camera" size={40} color="black" />
+                  <Text style={styles.buttonText}>Camera</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <MainButton
+            title="Cancel"
             onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
+            size="md"
+            style={{ marginTop: 10, backgroundColor: colors.error }}
+          />
         </View>
       </View>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.3)",
-  },
-  container: {
-    backgroundColor: "white",
-    padding: 24,
-    borderRadius: 12,
-    width: 250,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  button: {
-    padding: 12,
-    marginBottom: 10,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-  },
-  buttonText: {
-    textAlign: "center",
-  },
-  cancelButton: {
-    marginTop: 16,
-  },
-  cancelText: {
-    textAlign: "center",
-    color: "red",
-  },
-});
