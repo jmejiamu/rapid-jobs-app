@@ -11,6 +11,7 @@ import { PostJobType } from "@/src/types/postjob";
 import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
 import { API_URL } from "@/config/api";
+import { fontSize } from "@/src/theme/fontStyle";
 
 const ProfileScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -34,6 +35,32 @@ const ProfileScreen = () => {
       fetchJobs();
     }, [])
   );
+  const isLoggedIn = false;
+
+  if (!isLoggedIn) {
+    return (
+      <SafeAreaView
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center", paddingTop: 0 },
+        ]}
+      >
+        <View style={{ marginHorizontal: 16 }}>
+          <Text style={{ textAlign: "center", fontSize: fontSize.xl }}>
+            Please register or log in to view your profile, post job ads, and
+            apply for jobs.
+          </Text>
+          <MainButton
+            title="Register"
+            variant="text"
+            onPress={() => navigation.navigate("Register")}
+            size="md"
+            style={{ marginTop: 16 }}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
