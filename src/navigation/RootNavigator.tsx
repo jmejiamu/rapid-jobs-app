@@ -4,13 +4,14 @@ import OnboardingScreen from "../screens/OnboardingScreen/OnboardingScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
 import { useOnboarding } from "../hooks/useOnboarding";
 import PostJobScreen from "../screens/PostJobScreen/PostJobScreen";
-import { RegistrationScreen } from "../screens";
+import { LoginScreen, RegistrationScreen } from "../screens";
 
 export type RootStackParamList = {
   Onboarding: undefined;
   MainApp: undefined;
   PostJob: undefined;
   Register: undefined;
+  Login: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -43,6 +44,7 @@ const RootNavigator: React.FC = () => {
           <Stack.Screen name="MainApp" component={BottomTabNavigator} />
           <Stack.Screen name="PostJob" component={PostJobScreen} />
           <Stack.Screen name="Register" component={RegistrationScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
         </>
       )}
     </Stack.Navigator>

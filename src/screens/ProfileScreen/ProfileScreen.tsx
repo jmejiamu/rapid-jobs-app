@@ -4,6 +4,8 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
+import { RootState } from "@/src/redux/store";
+import { useSelector } from "react-redux";
 
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { JobCard, MainButton } from "@/src/components";
@@ -15,13 +17,23 @@ import { fontSize } from "@/src/theme/fontStyle";
 
 const ProfileScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const token = useSelector((state: RootState) => state.auth.token);
+
   const [jobs, setJobs] = useState<PostJobType[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/jobs/retrieve-jobs`);
+      // TODO: use this for the home screen
+      // const response = await fetch(`${API_URL}/jobs/retrieve-jobs`);
+      const response = await fetch(`${API_URL}/jobs/my-jobs`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
       setJobs(data);
     } catch (error) {
@@ -35,14 +47,18 @@ const ProfileScreen = () => {
       fetchJobs();
     }, [])
   );
-  const isLoggedIn = false;
+  const isLoggedIn = !!token;
 
   if (!isLoggedIn) {
     return (
       <SafeAreaView
         style={[
           styles.container,
-          { justifyContent: "center", alignItems: "center", paddingTop: 0 },
+          {
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 0,
+          },
         ]}
       >
         <View style={{ marginHorizontal: 16 }}>

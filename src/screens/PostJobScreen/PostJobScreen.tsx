@@ -7,11 +7,13 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 import { ImagePickerModal, ImageUploader, MainButton } from "@/src/components";
 import CustomInput from "@/src/components/CustomInput/CustomInput";
 import { ImageObject } from "@/src/types/imgUploader";
 import { PostJobType } from "@/src/types/postjob";
+import { RootState } from "@/src/redux/store";
 import { schema } from "./schema/formSchema";
 import { styles } from "./styles/styles";
 import { API_URL } from "@/config/api";
@@ -27,6 +29,7 @@ const PostJobScreen = () => {
     false,
     false,
   ]);
+  const token = useSelector((state: RootState) => state.auth.token);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const {
@@ -54,7 +57,10 @@ const PostJobScreen = () => {
     try {
       const response = await fetch(`${API_URL}/jobs/create-job`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error("Failed to post job");
