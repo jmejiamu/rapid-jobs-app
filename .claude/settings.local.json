@@ -1,8 +1,9 @@
 {
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
-      "Bash(npm install:*)"
-    ]
+      "Bash(npm install:*)",
+      "Bash(grep:*)"
+    ],
+    "defaultMode": "acceptEdits"
   }
 }
