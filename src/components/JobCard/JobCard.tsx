@@ -14,13 +14,26 @@ export const JobCard = ({ job }: { job: PostJobType }) => {
     setModalVisible(true);
   };
 
+  const formatDateTime = () => {
+    if (!job.postedAt) return "Today 2-4 pm";
+    const date = new Date(job.postedAt);
+    const today = new Date();
+    
+    if (date.toDateString() === today.toDateString()) {
+      return "Today 2-4 pm";
+    }
+    
+    return date.toLocaleDateString();
+  };
+
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{job.title}</Text>
-      <Text style={styles.pay}>${job.pay}</Text>
-      <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
-        {job.description}
-      </Text>
+      <Text style={styles.pay}>Pay ${job.pay}</Text>
+      <Text style={styles.dateTime}>Date/time - {formatDateTime()}</Text>
+      {job.address && (
+        <Text style={styles.address}>address - {job.address}</Text>
+      )}
       {/* Display images if available */}
       {Array.isArray(job.images) && job.images.length > 0 && (
         <View style={styles.rowContainer}>
@@ -38,10 +51,6 @@ export const JobCard = ({ job }: { job: PostJobType }) => {
           ))}
         </View>
       )}
-      <Text style={styles.date}>
-        Posted at :{" "}
-        {job?.postedAt ? new Date(job.postedAt).toLocaleDateString() : ""}
-      </Text>
       {/* Modal for full-size image */}
       <Modal
         visible={modalVisible}

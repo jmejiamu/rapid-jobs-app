@@ -33,6 +33,16 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginBottom: 8,
   },
+  dateTime: {
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
+    marginBottom: 2,
+  },
+  address: {
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
   date: {
     fontSize: fontSize.xs,
     color: colors.info,
