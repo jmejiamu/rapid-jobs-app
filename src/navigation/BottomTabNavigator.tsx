@@ -36,25 +36,25 @@ export default function BottomTabNavigator() {
         },
       })}
     >
-      <Tab.Screen 
-        name="Home" 
+      <Tab.Screen
+        name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: "Home"
+          tabBarLabel: "Home",
         }}
       />
-      <Tab.Screen 
-        name="Chat" 
+      <Tab.Screen
+        name="Chat"
         component={ChatScreen}
         options={{
-          tabBarLabel: "Chat"
+          tabBarLabel: "Chat",
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarLabel: "Profile"
+          tabBarLabel: "Profile",
         }}
       />
     </Tab.Navigator>
