@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,15 +11,17 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import io from "socket.io-client";
 
 import { JobCard } from "@/src/components/JobCard";
 import { MainButton } from "@/src/components/MainButton";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
 import { PostJobType } from "@/src/types/postjob";
-import { API_URL } from "@/config/api";
+import { API_SOCKET_URL, API_URL } from "@/config/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
+import { Feather } from "@expo/vector-icons";
 
 const HomeScreen: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -60,10 +62,22 @@ const HomeScreen: React.FC = () => {
     };
   }, [searchQuery]);
 
+  useEffect(() => {
+    const socket = io(API_SOCKET_URL);
+
+    socket.on("jobCreated", (newJob) => {
+      setJobs((prevJobs) => [newJob, ...prevJobs]);
+    });
+
+    return () => {
+      socket.off("jobCreated");
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-
       {/* Header */}
       <View
         style={{
@@ -139,7 +153,6 @@ const HomeScreen: React.FC = () => {
           ))}
         </ScrollView>
       </View>
-
       {/* Job List */}
       {loading ? (
         <View style={styles.loadingContainer}>

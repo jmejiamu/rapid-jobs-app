@@ -34,6 +34,7 @@
     "react-native-screens": "^4.13.1",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
     "zod": "^4.0.17"
   },
   "devDependencies": {
