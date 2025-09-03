@@ -20,15 +20,17 @@ const mockJobs: PostJobType[] = [
   {
     title: "Clean Back yard",
     pay: "15",
-    description: "Need someone to clean the back yard, remove weeds and organize garden tools",
+    description:
+      "Need someone to clean the back yard, remove weeds and organize garden tools",
     address: "San Salvador, 14 ave",
     postedAt: new Date(),
     _id: "1",
   },
   {
     title: "Clean Back yard",
-    pay: "15", 
-    description: "Need someone to clean the back yard, remove weeds and organize garden tools",
+    pay: "15",
+    description:
+      "Need someone to clean the back yard, remove weeds and organize garden tools",
     address: "San Salvador, 14 ave",
     postedAt: new Date(),
     _id: "2",
@@ -36,7 +38,8 @@ const mockJobs: PostJobType[] = [
   {
     title: "Clean Back yard",
     pay: "15",
-    description: "Need someone to clean the back yard, remove weeds and organize garden tools", 
+    description:
+      "Need someone to clean the back yard, remove weeds and organize garden tools",
     address: "San Salvador, 14 ave",
     postedAt: new Date(),
     _id: "3",
@@ -49,57 +52,34 @@ const HomeScreen: React.FC = () => {
 
   const filters = ["All", "Cleaning", "Gardening", "Painting"];
 
-  const filteredJobs = mockJobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         job.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = selectedFilter === "All" || 
-                         job.title.toLowerCase().includes(selectedFilter.toLowerCase());
+  const filteredJobs = mockJobs.filter((job) => {
+    const matchesSearch =
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      selectedFilter === "All" ||
+      job.title.toLowerCase().includes(selectedFilter.toLowerCase());
     return matchesSearch && matchesFilter;
   });
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-      
-      {/* Header */}
-      <View style={{
-        backgroundColor: colors.surface,
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.background,
-      }}>
-        <View style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 15,
-        }}>
-          <Text style={{
-            fontSize: fontSize.md,
-            color: colors.textPrimary,
-            fontWeight: "500",
-          }}>
-            home/ feed
-          </Text>
-          <TouchableOpacity>
-            <View style={{
-              width: 40,
-              height: 40,
-              backgroundColor: colors.background,
-              borderRadius: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-              <Text style={{ color: colors.textPrimary, fontWeight: "bold" }}>💬</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
 
+      {/* Header */}
+      <View
+        style={{
+          backgroundColor: colors.background,
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.background,
+        }}
+      >
         {/* Search Input */}
         <TextInput
           style={{
-            backgroundColor: colors.background,
+            backgroundColor: colors.surface,
             borderRadius: 8,
             paddingHorizontal: 15,
             paddingVertical: 12,
@@ -115,18 +95,20 @@ const HomeScreen: React.FC = () => {
         />
 
         {/* Filter By */}
-        <Text style={{
-          fontSize: fontSize.sm,
-          color: colors.textPrimary,
-          marginTop: 15,
-          marginBottom: 10,
-        }}>
+        <Text
+          style={{
+            fontSize: fontSize.sm,
+            color: colors.textPrimary,
+            marginTop: 15,
+            marginBottom: 10,
+          }}
+        >
           Filter by
         </Text>
 
         {/* Filter Buttons */}
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={{ marginBottom: 5 }}
         >
@@ -135,18 +117,24 @@ const HomeScreen: React.FC = () => {
               key={filter}
               onPress={() => setSelectedFilter(filter)}
               style={{
-                backgroundColor: selectedFilter === filter ? colors.primary : colors.background,
+                backgroundColor:
+                  selectedFilter === filter ? colors.primary : colors.surface,
                 paddingHorizontal: 20,
                 paddingVertical: 10,
                 borderRadius: 20,
                 marginRight: 10,
               }}
             >
-              <Text style={{
-                fontSize: fontSize.sm,
-                color: selectedFilter === filter ? colors.surface : colors.textPrimary,
-                fontWeight: selectedFilter === filter ? "600" : "400",
-              }}>
+              <Text
+                style={{
+                  fontSize: fontSize.sm,
+                  color:
+                    selectedFilter === filter
+                      ? colors.surface
+                      : colors.textPrimary,
+                  fontWeight: selectedFilter === filter ? "600" : "400",
+                }}
+              >
                 {filter}
               </Text>
             </TouchableOpacity>
@@ -155,7 +143,7 @@ const HomeScreen: React.FC = () => {
       </View>
 
       {/* Job List */}
-      <ScrollView 
+      <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 20 }}
         showsVerticalScrollIndicator={false}
@@ -163,40 +151,50 @@ const HomeScreen: React.FC = () => {
         {filteredJobs.map((job, index) => (
           <View key={job._id || index} style={{ marginBottom: 15 }}>
             <JobCard job={job} />
-            <View style={{
-              flexDirection: "row",
-              marginTop: 10,
-              gap: 10,
-            }}>
-              <TouchableOpacity style={{
-                backgroundColor: colors.textSecondary,
-                paddingHorizontal: 20,
-                paddingVertical: 10,
-                borderRadius: 8,
-                flex: 1,
-              }}>
-                <Text style={{
-                  color: colors.surface,
-                  fontSize: fontSize.sm,
-                  fontWeight: "500",
-                  textAlign: "center",
-                }}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                gap: 10,
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: colors.textSecondary,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  borderRadius: 8,
+                  flex: 1,
+                }}
+              >
+                <Text
+                  style={{
+                    color: colors.surface,
+                    fontSize: fontSize.sm,
+                    fontWeight: "500",
+                    textAlign: "center",
+                  }}
+                >
                   See details
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{
-                backgroundColor: colors.primary,
-                paddingHorizontal: 20,
-                paddingVertical: 10,
-                borderRadius: 8,
-                flex: 1,
-              }}>
-                <Text style={{
-                  color: colors.surface,
-                  fontSize: fontSize.sm,
-                  fontWeight: "500",
-                  textAlign: "center",
-                }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: colors.primary,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  borderRadius: 8,
+                  flex: 1,
+                }}
+              >
+                <Text
+                  style={{
+                    color: colors.surface,
+                    fontSize: fontSize.sm,
+                    fontWeight: "500",
+                    textAlign: "center",
+                  }}
+                >
                   Do this job
                 </Text>
               </TouchableOpacity>
