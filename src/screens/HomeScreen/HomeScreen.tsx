@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 
 import { JobCard } from "@/src/components/JobCard";
@@ -14,53 +17,48 @@ import { MainButton } from "@/src/components/MainButton";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
 import { PostJobType } from "@/src/types/postjob";
-
-// Mock data for demonstration
-const mockJobs: PostJobType[] = [
-  {
-    title: "Clean Back yard",
-    pay: "15",
-    description:
-      "Need someone to clean the back yard, remove weeds and organize garden tools",
-    address: "San Salvador, 14 ave",
-    postedAt: new Date(),
-    _id: "1",
-  },
-  {
-    title: "Clean Back yard",
-    pay: "15",
-    description:
-      "Need someone to clean the back yard, remove weeds and organize garden tools",
-    address: "San Salvador, 14 ave",
-    postedAt: new Date(),
-    _id: "2",
-  },
-  {
-    title: "Clean Back yard",
-    pay: "15",
-    description:
-      "Need someone to clean the back yard, remove weeds and organize garden tools",
-    address: "San Salvador, 14 ave",
-    postedAt: new Date(),
-    _id: "3",
-  },
-];
+import { API_URL } from "@/config/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/src/redux/store";
 
 const HomeScreen: React.FC = () => {
+  const token = useSelector((state: RootState) => state.auth.token);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const [loading, setLoading] = useState(false);
+  const [jobs, setJobs] = useState<PostJobType[]>([]);
 
   const filters = ["All", "Cleaning", "Gardening", "Painting"];
 
-  const filteredJobs = mockJobs.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      selectedFilter === "All" ||
-      job.title.toLowerCase().includes(selectedFilter.toLowerCase());
-    return matchesSearch && matchesFilter;
-  });
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_URL}/jobs/retrieve-jobs?title=${searchQuery}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      setJobs(data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Debounced fetchJobs when searchQuery changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      fetchJobs();
+    }, 350); // 350ms debounce
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -143,67 +141,57 @@ const HomeScreen: React.FC = () => {
       </View>
 
       {/* Job List */}
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 20 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {filteredJobs.map((job, index) => (
-          <View key={job._id || index} style={{ marginBottom: 15 }}>
-            <JobCard job={job} />
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 10,
-                gap: 10,
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  backgroundColor: colors.textSecondary,
-                  paddingHorizontal: 20,
-                  paddingVertical: 10,
-                  borderRadius: 8,
-                  flex: 1,
-                }}
-              >
-                <Text
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.textPrimary} />
+        </View>
+      ) : (
+        <FlatList
+          data={jobs}
+          renderItem={({ item }) => {
+            return (
+              <>
+                <JobCard job={item} />
+                <View
                   style={{
-                    color: colors.surface,
-                    fontSize: fontSize.sm,
-                    fontWeight: "500",
-                    textAlign: "center",
+                    flexDirection: "row",
+                    marginTop: 10,
+                    gap: 10,
                   }}
                 >
-                  See details
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: colors.primary,
-                  paddingHorizontal: 20,
-                  paddingVertical: 10,
-                  borderRadius: 8,
-                  flex: 1,
-                }}
-              >
-                <Text
-                  style={{
-                    color: colors.surface,
-                    fontSize: fontSize.sm,
-                    fontWeight: "500",
-                    textAlign: "center",
-                  }}
-                >
-                  Do this job
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+                  <View style={{}}>
+                    <MainButton
+                      title="See details"
+                      onPress={() => {}}
+                      style={{ backgroundColor: colors.primary }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <MainButton
+                      title="Do this job"
+                      onPress={() => {}}
+                      style={{ backgroundColor: colors.textSecondary }}
+                    />
+                  </View>
+                </View>
+              </>
+            );
+          }}
+          keyExtractor={(item, index) => item._id + index.toString()}
+          contentContainerStyle={{ padding: 16 }}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </SafeAreaView>
   );
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
