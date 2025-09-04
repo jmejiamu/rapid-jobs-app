@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,39 +12,24 @@ import { JobCard, MainButton } from "@/src/components";
 import { PostJobType } from "@/src/types/postjob";
 import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
-import { API_URL } from "@/config/api";
 import { fontSize } from "@/src/theme/fontStyle";
+import { usePagination } from "@/src/hooks";
 
 const ProfileScreen = () => {
+  const { data, loading, loadingMore, currentPage, totalPages, fetchData } =
+    usePagination<PostJobType>({
+      endpoint: "/jobs/my-jobs",
+      dataKey: "myJobs",
+      paginationKey: "pagination",
+    });
+
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const token = useSelector((state: RootState) => state.auth.token);
 
-  const [jobs, setJobs] = useState<PostJobType[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchJobs = async () => {
-    setLoading(true);
-    try {
-      // TODO: use this for the home screen
-      // const response = await fetch(`${API_URL}/jobs/retrieve-jobs`);
-      const response = await fetch(`${API_URL}/jobs/my-jobs`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setJobs(data);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
-      fetchJobs();
+      fetchData();
     }, [])
   );
   const isLoggedIn = !!token;
@@ -104,16 +89,30 @@ const ProfileScreen = () => {
           </View>
         ) : (
           <FlatList
-            data={jobs}
+            data={data}
             keyExtractor={(item, idx) => item?._id + idx.toString()}
             renderItem={({ item }) => <JobCard job={item} />}
             ListEmptyComponent={<Text>No jobs found.</Text>}
             ListHeaderComponent={
               <>
-                {jobs.length > 0 && (
+                {data.length > 0 && (
                   <Text style={styles.headerText}>My Posted Jobs</Text>
                 )}
               </>
+            }
+            // Pagination: fetch more data when reaching end
+            onEndReached={() => {
+              if (!loadingMore && currentPage < totalPages) {
+                fetchData(currentPage + 1);
+              }
+            }}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              loadingMore ? (
+                <View style={{ paddingVertical: 16 }}>
+                  <ActivityIndicator size="small" color={colors.textPrimary} />
+                </View>
+              ) : null
             }
           />
         )}
