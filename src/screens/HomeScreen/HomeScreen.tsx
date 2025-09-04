@@ -17,63 +17,50 @@ import { JobCard } from "@/src/components/JobCard";
 import { MainButton } from "@/src/components/MainButton";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
+import { API_SOCKET_URL } from "@/config/api";
+import { usePagination } from "@/src/hooks";
 import { PostJobType } from "@/src/types/postjob";
-import { API_SOCKET_URL, API_URL } from "@/config/api";
-import { useSelector } from "react-redux";
-import { RootState } from "@/src/redux/store";
-import { Feather } from "@expo/vector-icons";
 
 const HomeScreen: React.FC = () => {
-  const token = useSelector((state: RootState) => state.auth.token);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
-  const [loading, setLoading] = useState(false);
-  const [jobs, setJobs] = useState<PostJobType[]>([]);
+
+  const {
+    data: jobs,
+    loading,
+    loadingMore,
+    currentPage,
+    totalPages,
+    fetchData,
+    resetData,
+    addNewItem,
+  } = usePagination<PostJobType>();
 
   const filters = ["All", "Cleaning", "Gardening", "Painting"];
 
-  const fetchJobs = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${API_URL}/jobs/retrieve-jobs?title=${searchQuery}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await response.json();
-      setJobs(data);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Debounced fetchJobs when searchQuery changes
+  // Debounced fetchData when searchQuery changes
   useEffect(() => {
+    resetData();
     const handler = setTimeout(() => {
-      fetchJobs();
+      fetchData(1, searchQuery);
     }, 350); // 350ms debounce
     return () => {
       clearTimeout(handler);
     };
-  }, [searchQuery]);
+  }, [searchQuery, fetchData, resetData]);
 
   useEffect(() => {
     const socket = io(API_SOCKET_URL);
 
     socket.on("jobCreated", (newJob) => {
-      setJobs((prevJobs) => [newJob, ...prevJobs]);
+      addNewItem(newJob);
     });
 
     return () => {
       socket.off("jobCreated");
       socket.disconnect();
     };
-  }, []);
+  }, [addNewItem]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -193,6 +180,19 @@ const HomeScreen: React.FC = () => {
           keyExtractor={(item, index) => item._id + index.toString()}
           contentContainerStyle={{ padding: 16 }}
           showsVerticalScrollIndicator={false}
+          onEndReached={() => {
+            if (currentPage < totalPages && !loadingMore) {
+              fetchData(currentPage + 1);
+            }
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() =>
+            loadingMore ? (
+              <View style={{ padding: 16, alignItems: "center" }}>
+                <ActivityIndicator size="small" color={colors.primary} />
+              </View>
+            ) : null
+          }
         />
       )}
     </SafeAreaView>
