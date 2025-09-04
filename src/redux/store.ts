@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { AnyAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   persistStore,
   persistReducer,
@@ -10,7 +10,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import authReducer from "./authSlice";
+import authReducer, { logout } from "./authSlice";
 
 const persistConfig = {
   key: "root",
@@ -20,11 +20,22 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
 });
-const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = configureStore({
+const appReducer = (
+  state: ReturnType<typeof rootReducer> | undefined,
+  action: AnyAction
+) => {
+  if (action.type === logout.type) {
+    AsyncStorage.clear(); // ✅ Clears persisted storage
+    state = undefined; // ✅ Reset Redux state
+  }
+  return rootReducer(state, action);
+};
+
+const persistedReducer = persistReducer(persistConfig, appReducer);
+
+export const store = configureStore({
   reducer: persistedReducer,
-
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -37,4 +48,4 @@ const persistor = persistStore(store);
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
-export { store, persistor };
+export { persistor };
