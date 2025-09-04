@@ -13,7 +13,7 @@ import { colors } from "@/src/theme/colors";
 import { API_URL } from "@/config/api";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/src/redux/store";
-import { setToken } from "@/src/redux/authSlice";
+import { setUserData } from "@/src/redux/authSlice";
 
 const schema = z.object({
   phone: z
@@ -55,10 +55,9 @@ const LoginScreen = () => {
       }
 
       const data = await response.json();
-      console.log("OTP verified successfully:", data);
 
       if (data.token) {
-        dispatch(setToken(data.token));
+        dispatch(setUserData(data));
         navigation.navigate("MainApp");
       }
     } catch (error) {

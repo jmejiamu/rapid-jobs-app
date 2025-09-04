@@ -41,6 +41,7 @@ export const usePagination = <T = any,>(
 
   const fetchData = useCallback(
     async (page: number = 1, searchQuery: string = "") => {
+      if (dataKey === "myJobs" && !token) return;
       if (page === 1) setLoading(true);
       else setLoadingMore(true);
 

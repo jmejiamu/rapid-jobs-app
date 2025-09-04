@@ -26,6 +26,8 @@ const ProfileScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const token = useSelector((state: RootState) => state.auth.token);
+  const username = useSelector((state: RootState) => state.auth.name);
+  const phone = useSelector((state: RootState) => state.auth.phone);
 
   useFocusEffect(
     useCallback(() => {
@@ -70,9 +72,9 @@ const ProfileScreen = () => {
           <View style={styles.avatar} />
 
           <View style={styles.infoContainer}>
-            <Text style={styles.userName}>User name</Text>
+            <Text style={styles.userName}>{username}</Text>
             <Text style={styles.userDetails}>
-              +1503 245 6772 <Text style={styles.verified}>| verified</Text>
+              {phone} <Text style={styles.verified}>| verified</Text>
             </Text>
           </View>
         </View>
@@ -95,7 +97,7 @@ const ProfileScreen = () => {
             ListEmptyComponent={<Text>No jobs found.</Text>}
             ListHeaderComponent={
               <>
-                {data.length > 0 && (
+                {data?.length > 0 && (
                   <Text style={styles.headerText}>My Posted Jobs</Text>
                 )}
               </>

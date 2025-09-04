@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setToken } from "@/src/redux/authSlice";
+import { setUserData } from "@/src/redux/authSlice";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -65,7 +65,6 @@ const RegistrationScreen = () => {
       }
 
       const data = await response.json();
-      console.log("OTP verified successfully:", data);
       if (data.success) {
         setSuccess(true);
       }
@@ -99,7 +98,7 @@ const RegistrationScreen = () => {
 
       const data = await response.json();
       if (data.token) {
-        dispatch(setToken(data.token));
+        dispatch(setUserData(data));
         navigation.navigate("MainApp");
       }
       // Navigate to the next screen or show a success message
