@@ -1,5 +1,11 @@
 import React, { useCallback } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
@@ -14,6 +20,7 @@ import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
 import { fontSize } from "@/src/theme/fontStyle";
 import { usePagination } from "@/src/hooks";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const ProfileScreen = () => {
   const { data, loading, loadingMore, currentPage, totalPages, fetchData } =
@@ -68,6 +75,12 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ marginHorizontal: 16, flex: 1 }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Request")}
+          style={styles.notificationIcon}
+        >
+          <MaterialIcons name="notifications-active" size={24} color="black" />
+        </TouchableOpacity>
         <View style={styles.rowContainer}>
           <View style={styles.avatar} />
 

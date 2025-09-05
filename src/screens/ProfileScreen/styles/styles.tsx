@@ -71,4 +71,11 @@ export const styles = StyleSheet.create({
     color: colors.textPrimary,
     marginVertical: 16,
   },
+  notificationIcon: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    padding: 8,
+    zIndex: 1,
+  },
 });

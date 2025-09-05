@@ -55,6 +55,7 @@ export default function BottomTabNavigator() {
         component={ProfileScreen}
         options={{
           tabBarLabel: "Profile",
+          tabBarBadge: 1,
         }}
       />
     </Tab.Navigator>
