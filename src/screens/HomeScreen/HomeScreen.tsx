@@ -17,7 +17,7 @@ import { JobCard } from "@/src/components/JobCard";
 import { MainButton } from "@/src/components/MainButton";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
-import { API_SOCKET_URL } from "@/config/api";
+import { API_SOCKET_URL, API_URL } from "@/config/api";
 import { usePagination } from "@/src/hooks";
 import { PostJobType } from "@/src/types/postjob";
 import { AntDesign } from "@expo/vector-icons";
@@ -44,6 +44,23 @@ const HomeScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   const filters = ["All", "Cleaning", "Gardening", "Painting"];
+
+  const requestJobs = async (jobId: string) => {
+    try {
+      const response = await fetch(`${API_URL}/jobs/request-job/${jobId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch job");
+      }
+      const job = await response.json();
+    } catch (error) {
+      console.error("Error fetching job details:", error);
+    }
+  };
 
   // Debounced fetchData when searchQuery changes
   useEffect(() => {
@@ -152,7 +169,11 @@ const HomeScreen: React.FC = () => {
                   <View style={styles.doJobButton}>
                     <MainButton
                       title="Do this job"
-                      onPress={() => {}}
+                      onPress={() => {
+                        if (item?._id) {
+                          requestJobs(item._id);
+                        }
+                      }}
                       style={styles.secondaryButton}
                     />
                   </View>
