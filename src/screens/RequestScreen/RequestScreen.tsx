@@ -22,10 +22,6 @@ const RequestScreen = () => {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const [requestedJobs, setRequestedJobs] = useState<RequestedJob[]>([]);
-  console.log(
-    "🚀 ~ RequestScreen ~ requestedJobs:",
-    JSON.stringify(requestedJobs, null, 2)
-  );
 
   const getRequestedJobs = async () => {
     try {
@@ -68,15 +64,13 @@ const RequestScreen = () => {
           <View
             style={{ padding: 16, borderBottomWidth: 1, borderColor: "#ccc" }}
           >
-            {item.requests.map((req) => (
-              <Text key={req.userId._id} style={{ marginBottom: 8 }}>
-                {req.userId.name} want to do this job - Status: {req.status}
-              </Text>
-            ))}
             <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {item.title}
+              {item.jobId.title}
             </Text>
-            <Text>{item.description}</Text>
+            <Text>{item.jobId.description}</Text>
+            <Text key={item.userId._id} style={{ marginBottom: 8 }}>
+              {item.userId.name} want to do this job - Status: {item.status}
+            </Text>
             <View
               style={{
                 flexDirection: "row",
