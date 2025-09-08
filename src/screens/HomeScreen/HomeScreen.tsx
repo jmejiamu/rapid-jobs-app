@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import {
   View,
   Text,
@@ -26,6 +26,7 @@ import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { AppDispatch, persistor, RootState } from "@/src/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/src/redux/authSlice";
+import { setCount } from "@/src/redux/countSlice";
 
 const HomeScreen: React.FC = () => {
   const {
@@ -38,6 +39,7 @@ const HomeScreen: React.FC = () => {
     resetData,
     addNewItem,
   } = usePagination<PostJobType>();
+  const socket = io(API_SOCKET_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch<AppDispatch>();
@@ -53,12 +55,25 @@ const HomeScreen: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) {
-        throw new Error("Failed to fetch job");
-      }
+
       const job = await response.json();
     } catch (error) {
       console.error("Error fetching job details:", error);
+    }
+  };
+
+  const fetchCount = async () => {
+    try {
+      const response = await fetch(`${API_URL}/jobs/request-count`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const countData = await response.json();
+      dispatch(setCount(countData.requestCount || 0));
+    } catch (error) {
+      console.error("Error fetching job count:", error);
     }
   };
 
@@ -74,8 +89,6 @@ const HomeScreen: React.FC = () => {
   }, [searchQuery, fetchData, resetData]);
 
   useEffect(() => {
-    const socket = io(API_SOCKET_URL);
-
     socket.on("jobCreated", (newJob) => {
       addNewItem(newJob);
     });
@@ -85,6 +98,18 @@ const HomeScreen: React.FC = () => {
       socket.disconnect();
     };
   }, [addNewItem]);
+
+  useEffect(() => {
+    fetchCount();
+    socket.on("jobRequested", () => {
+      fetchCount();
+    });
+
+    return () => {
+      socket.off("jobRequested");
+      socket.disconnect();
+    };
+  }, []);
 
   // Logout handler
   const handleLogout = async () => {

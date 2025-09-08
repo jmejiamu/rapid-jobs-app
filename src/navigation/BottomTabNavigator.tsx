@@ -5,10 +5,13 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import { ProfileScreen, ChatScreen } from "../screens";
 import { colors } from "../theme/colors";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
+  const count = useSelector((state: RootState) => state.count.value);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -55,7 +58,7 @@ export default function BottomTabNavigator() {
         component={ProfileScreen}
         options={{
           tabBarLabel: "Profile",
-          tabBarBadge: 1,
+          tabBarBadge: count > 0 ? count : undefined,
         }}
       />
     </Tab.Navigator>

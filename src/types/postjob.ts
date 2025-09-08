@@ -10,18 +10,23 @@ export interface PostJobType extends z.infer<typeof schema> {
 }
 
 export interface RequestedJob extends PostJobType {
+  _id: string;
+  jobId: {
+    _id: string;
+    title: string;
+    pay: string;
+    address: string;
+    description: string;
+    images: ImageObject[];
+    userId: string;
+    postedAt: Date;
+    __v: number;
+  };
   userId: {
     _id: string;
     name: string;
   };
-  requests: [
-    {
-      userId: {
-        _id: string;
-        name: string;
-      };
-      status: string;
-      requestedAt: Date;
-    }
-  ];
+  ownerPostId: string;
+  status: string;
+  requestedAt: Date;
 }
