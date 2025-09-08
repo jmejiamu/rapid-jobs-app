@@ -35,6 +35,7 @@ const ProfileScreen = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   const username = useSelector((state: RootState) => state.auth.name);
   const phone = useSelector((state: RootState) => state.auth.phone);
+  const count = useSelector((state: RootState) => state.count.value);
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +80,11 @@ const ProfileScreen = () => {
           onPress={() => navigation.navigate("Request")}
           style={styles.notificationIcon}
         >
-          <MaterialIcons name="notifications-active" size={24} color="black" />
+          <MaterialIcons
+            name="notifications-active"
+            size={24}
+            color={count > 0 ? colors.error : colors.textSecondary}
+          />
         </TouchableOpacity>
         <View style={styles.rowContainer}>
           <View style={styles.avatar} />
