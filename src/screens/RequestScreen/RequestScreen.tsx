@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { API_URL } from "@/config/api";
+import { API_SOCKET_URL, API_URL } from "@/config/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,8 +16,11 @@ import { RequestedJob } from "@/src/types/postjob";
 import { MainButton } from "@/src/components";
 import { colors } from "@/src/theme/colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import io from "socket.io-client";
 
 const RequestScreen = () => {
+  const socket = io(API_SOCKET_URL);
+
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const token = useSelector((state: RootState) => state.auth.token);
 
@@ -31,11 +34,25 @@ const RequestScreen = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) {
-        throw new Error("Failed to fetch job");
-      }
       const job = await response.json();
       setRequestedJobs(job.requestedJobs);
+    } catch (error) {
+      console.error("Error fetching job details:", error);
+    }
+  };
+
+  const rejectJob = async (jobId: string, requestId: string) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/jobs/reject-request/${jobId}/${requestId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const job = await response.json();
     } catch (error) {
       console.error("Error fetching job details:", error);
     }
@@ -44,6 +61,23 @@ const RequestScreen = () => {
   useEffect(() => {
     getRequestedJobs();
   }, []);
+
+  useEffect(() => {
+    socket.on("requestRejected", (data) => {
+      const { request } = data;
+      setRequestedJobs((prevRequests) =>
+        prevRequests.filter(
+          (r) => r._id !== request._id && r.jobId._id !== request.jobId
+        )
+      );
+    });
+
+    return () => {
+      socket.off("requestRejected");
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <SafeAreaView>
       <View style={{ padding: 16 }}>
@@ -87,7 +121,10 @@ const RequestScreen = () => {
               <MainButton
                 style={{ flex: 1, backgroundColor: colors.error }}
                 title="Reject"
-                onPress={() => {}}
+                onPress={() => rejectJob(item.jobId._id, item._id)}
+                // onPress={() => {
+                //   console.log("Reject Job pressed", item.jobId._id, item._id);
+                // }}
               />
             </View>
           </View>
