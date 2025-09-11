@@ -58,6 +58,23 @@ const RequestScreen = () => {
     }
   };
 
+  const approveJob = async (jobId: string, requestId: string) => {
+    try {
+      const response = await fetch(
+        `${API_URL}/jobs/approve-request/${jobId}/${requestId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const job = await response.json();
+    } catch (error) {
+      console.error("Error fetching job details:", error);
+    }
+  };
+
   useEffect(() => {
     getRequestedJobs();
   }, []);
@@ -70,6 +87,11 @@ const RequestScreen = () => {
           (r) => r._id !== request._id && r.jobId._id !== request.jobId
         )
       );
+    });
+
+    socket.on("requestApproved", (data) => {
+      const { request } = data;
+      getRequestedJobs();
     });
 
     return () => {
@@ -116,15 +138,12 @@ const RequestScreen = () => {
               <MainButton
                 style={{ flex: 1 }}
                 title="Accept"
-                onPress={() => {}}
+                onPress={() => approveJob(item.jobId._id, item._id)}
               />
               <MainButton
                 style={{ flex: 1, backgroundColor: colors.error }}
                 title="Reject"
                 onPress={() => rejectJob(item.jobId._id, item._id)}
-                // onPress={() => {
-                //   console.log("Reject Job pressed", item.jobId._id, item._id);
-                // }}
               />
             </View>
           </View>

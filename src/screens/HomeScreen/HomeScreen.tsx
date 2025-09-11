@@ -109,9 +109,14 @@ const HomeScreen: React.FC = () => {
       fetchCount();
     });
 
+    socket.on("requestApproved", () => {
+      fetchCount();
+    });
+
     return () => {
       socket.off("jobRequested");
       socket.off("requestRejected");
+      socket.off("requestApproved");
       socket.disconnect();
     };
   }, []);
