@@ -110,7 +110,7 @@ const RequestScreen = () => {
           <MaterialIcons name="arrow-back-ios" size={24} color="black" />
         </TouchableOpacity>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Total Requested Jobs: {requestedJobs.length}
+          Total Requested Jobs: {requestedJobs?.length ?? 0}
         </Text>
       </View>
       <FlatList

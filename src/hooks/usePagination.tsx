@@ -67,7 +67,7 @@ export const usePagination = <T = any,>(
           setData((prev) => [...prev, ...responseData[dataKey]]);
         }
 
-        setTotalPages(responseData[paginationKey].totalPages);
+        setTotalPages(responseData[paginationKey]?.totalPages);
         setCurrentPage(page);
       } catch (error) {
         console.error("Error fetching data:", error);
