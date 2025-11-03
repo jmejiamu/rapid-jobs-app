@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
 import { ProfileScreen, ChatScreen } from "../screens";
@@ -16,26 +16,38 @@ export default function BottomTabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap;
+        tabBarIcon: ({ focused, color }) => {
+          let iconName: keyof typeof FontAwesome.glyphMap;
 
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
+            iconName = focused ? "home" : "home";
           } else if (route.name === "Chat") {
-            iconName = focused ? "chatbubbles" : "chatbubbles-outline";
+            iconName = focused ? "comments" : "comments-o";
           } else if (route.name === "Profile") {
-            iconName = focused ? "person" : "person-outline";
+            iconName = focused ? "user" : "user-o";
           } else {
-            iconName = "help-outline";
+            iconName = "question-circle-o";
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <FontAwesome name={iconName} size={24} color={color} />;
         },
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarInactiveTintColor: "#8E8E93",
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "500",
+          marginTop: 4,
+        },
         tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.background,
+          backgroundColor: "#FFFFFF",
+          borderTopColor: "#E5E5EA",
+          borderTopWidth: 0.5,
+          paddingTop: 8,
+          paddingBottom: 20,
+          height: 84,
+        },
+        tabBarItemStyle: {
+          paddingTop: 4,
         },
       })}
     >
