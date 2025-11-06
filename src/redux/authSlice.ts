@@ -4,12 +4,14 @@ interface AuthState {
   token: string | null;
   phone: string | null;
   name: string | null;
+  userId?: string | null;
 }
 
 const initialState: AuthState = {
   token: null,
   phone: null,
   name: null,
+  userId: null,
 };
 
 const authSlice = createSlice({
@@ -20,6 +22,7 @@ const authSlice = createSlice({
       state.phone = action.payload.phone;
       state.name = action.payload.name;
       state.token = action.payload.token;
+      state.userId = action.payload.userId;
     },
     setToken(state, action: PayloadAction<string>) {
       state.token = action.payload;

@@ -7,6 +7,7 @@ import { ProfileScreen, ChatScreen } from "../screens";
 import { colors } from "../theme/colors";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import ChatList from "../screens/ChatList/ChatList";
 
 const Tab = createBottomTabNavigator();
 
@@ -60,7 +61,7 @@ export default function BottomTabNavigator() {
       />
       <Tab.Screen
         name="Chat"
-        component={ChatScreen}
+        component={ChatList}
         options={{
           tabBarLabel: "Chat",
         }}

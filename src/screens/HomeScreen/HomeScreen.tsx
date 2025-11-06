@@ -197,7 +197,9 @@ const HomeScreen: React.FC = () => {
                   <View style={styles.seeDetailsButton}>
                     <MainButton
                       title="See details"
-                      onPress={() => {}}
+                      onPress={() =>
+                        navigation.navigate("DetailJob", { job: item })
+                      }
                       style={styles.primaryButton}
                     />
                   </View>
