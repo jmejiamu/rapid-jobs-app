@@ -4,8 +4,12 @@ import OnboardingScreen from "../screens/OnboardingScreen/OnboardingScreen";
 import BottomTabNavigator from "./BottomTabNavigator";
 import { useOnboarding } from "../hooks/useOnboarding";
 import PostJobScreen from "../screens/PostJobScreen/PostJobScreen";
-import { LoginScreen, RegistrationScreen } from "../screens";
+import { ChatScreen, LoginScreen, RegistrationScreen } from "../screens";
 import RequestScreen from "../screens/RequestScreen/RequestScreen";
+import DetailJobScreen from "../screens/DetailJobScreen/DetailJobScreen";
+import { PostJobType } from "../types/postjob";
+import ChatList from "../screens/ChatList/ChatList";
+import { RoomDetails, Rooms } from "../types/Rooms";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -14,6 +18,9 @@ export type RootStackParamList = {
   Register: undefined;
   Login: undefined;
   Request: undefined;
+  ChatList: undefined;
+  DetailJob: { job: PostJobType };
+  ChatDetail: { job: RoomDetails };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -48,6 +55,9 @@ const RootNavigator: React.FC = () => {
           <Stack.Screen name="Register" component={RegistrationScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Request" component={RequestScreen} />
+          <Stack.Screen name="DetailJob" component={DetailJobScreen} />
+          <Stack.Screen name="ChatList" component={ChatList} />
+          <Stack.Screen name="ChatDetail" component={ChatScreen} />
         </>
       )}
     </Stack.Navigator>
