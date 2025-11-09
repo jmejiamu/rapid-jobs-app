@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import io, { Socket } from "socket.io-client";
+import io from "socket.io-client";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { fontSize } from "@/src/theme/fontStyle";
@@ -36,6 +36,7 @@ import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 type DetailJobRouteProp = RouteProp<RootStackParamList, "ChatDetail">;
 
 const ChatScreen: React.FC = () => {
+  const socket = io(API_SOCKET_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const userId = useSelector((state: RootState) => state.auth.userId); // Replace with actual user ID from auth context or redux
   const route = useRoute<DetailJobRouteProp>();
@@ -53,35 +54,9 @@ const ChatScreen: React.FC = () => {
       timestamp: string;
     }[]
   >([]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  const socket = useRef<Socket | null>(null);
-
-  useEffect(() => {
-    socket.current = io(API_SOCKET_URL);
-
-    return () => {
-      socket.current?.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!job?.jobId || !userId) return;
-
-    const activeSocket = socket.current;
-    activeSocket?.emit("joinRoom", { roomId: job.jobId, userId });
-
-    const handleIncomingMessage = (incoming: (typeof newMessage)[number]) => {
-      setNewMessage((prev) => [...prev, incoming]);
-    };
-
-    activeSocket?.on("newMessage", handleIncomingMessage);
-
-    return () => {
-      activeSocket?.off("newMessage", handleIncomingMessage);
-    };
-  }, [job?.jobId, userId]);
 
   const sendMessage = async () => {
     if (!messages.trim()) return;
@@ -104,15 +79,6 @@ const ChatScreen: React.FC = () => {
 
       if (response.ok) {
         setMessages("");
-        // Optimistic update while we wait for socket event
-        setNewMessage((prev) => [
-          ...prev,
-          {
-            ...payload,
-            senderId: userId ?? "",
-            timestamp: new Date().toISOString(),
-          },
-        ]);
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -150,6 +116,24 @@ const ChatScreen: React.FC = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    if (!job?.jobId || !userId) return;
+
+    socket.emit("joinRoom", { roomId: job.jobId, userId });
+
+    socket.on("newMessage", (newMessage) => {
+      if (typeof newMessage === "object" && newMessage !== null) {
+        setNewMessage((prev) => [...prev, newMessage]);
+      } else {
+        console.error("Invalid incoming message:", newMessage);
+      }
+    });
+
+    return () => {
+      socket.off("newMessage");
+      socket.disconnect();
+    };
+  }, [job?.jobId, userId]);
 
   useEffect(() => {
     fetchChatHistory();
@@ -171,6 +155,9 @@ const ChatScreen: React.FC = () => {
   const renderMessage = useCallback(
     ({ item }: { item: (typeof newMessage)[number] }) => {
       const isOwn = item.senderId === userId;
+      const messageText =
+        typeof item.message === "string" ? item.message : "Invalid message";
+      const timestampText = formatTimestamp(item.timestamp);
       return (
         <View
           style={[
@@ -190,10 +177,10 @@ const ChatScreen: React.FC = () => {
                 isOwn ? styles.ownMessageText : undefined,
               ]}
             >
-              {item.message}
+              {messageText}
             </Text>
             <Text style={isOwn ? { color: "white" } : styles.timestampText}>
-              {formatTimestamp(item.timestamp)}
+              {timestampText}
             </Text>
           </View>
         </View>
