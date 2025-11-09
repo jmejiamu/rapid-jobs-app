@@ -128,8 +128,8 @@ const ChatList = () => {
         </>
       ) : (
         <>
-          <Ionicons
-            name="chatbubble-ellipses-outline"
+          <AntDesign
+            name="message"
             size={42}
             color={colors.textSecondary}
             style={styles.stateIcon}

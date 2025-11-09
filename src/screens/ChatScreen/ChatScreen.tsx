@@ -31,7 +31,12 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
-import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 type DetailJobRouteProp = RouteProp<RootStackParamList, "ChatDetail">;
 
@@ -210,11 +215,7 @@ const ChatScreen: React.FC = () => {
 
     return (
       <View style={styles.stateContainer}>
-        <Ionicons
-          name="chatbubble-ellipses-outline"
-          size={32}
-          color={colors.textSecondary}
-        />
+        <AntDesign name="message" size={32} color={colors.textSecondary} />
         <Text style={styles.stateText}>
           No messages yet. Say hello to start the conversation!
         </Text>
