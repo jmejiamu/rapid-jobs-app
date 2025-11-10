@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   Text,
   TouchableOpacity,
   View,
@@ -111,7 +112,17 @@ const ProfileScreen = () => {
           <FlatList
             data={data}
             keyExtractor={(item, idx) => item?._id + idx.toString()}
-            renderItem={({ item }) => <JobCard job={item} />}
+            renderItem={({ item }) => {
+              return (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("JobPostDetail", { job: item })
+                  }
+                >
+                  <JobCard job={item} />
+                </Pressable>
+              );
+            }}
             ListEmptyComponent={<Text>No jobs found.</Text>}
             ListHeaderComponent={
               <>
