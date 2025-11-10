@@ -10,6 +10,7 @@ import DetailJobScreen from "../screens/DetailJobScreen/DetailJobScreen";
 import { PostJobType } from "../types/postjob";
 import ChatList from "../screens/ChatList/ChatList";
 import { RoomDetails, Rooms } from "../types/Rooms";
+import JobPostDetailScreen from "../screens/JobPostDetailScreen/JobPostDetailScreen";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   ChatList: undefined;
   DetailJob: { job: PostJobType };
   ChatDetail: { job: RoomDetails };
+  JobPostDetail: { job: PostJobType };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -58,6 +60,7 @@ const RootNavigator: React.FC = () => {
           <Stack.Screen name="DetailJob" component={DetailJobScreen} />
           <Stack.Screen name="ChatList" component={ChatList} />
           <Stack.Screen name="ChatDetail" component={ChatScreen} />
+          <Stack.Screen name="JobPostDetail" component={JobPostDetailScreen} />
         </>
       )}
     </Stack.Navigator>
