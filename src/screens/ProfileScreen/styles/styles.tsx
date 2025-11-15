@@ -30,7 +30,23 @@ export const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 90 / 2,
-    backgroundColor: "#D8D8D8",
+    backgroundColor: colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  avatarText: {
+    fontSize: fontSize.xxl,
+    fontWeight: "700",
+    color: colors.surface,
+    letterSpacing: 1,
   },
   userName: {
     fontSize: fontSize.md,
@@ -42,7 +58,17 @@ export const styles = StyleSheet.create({
     fontSize: fontSize.xs,
     color: colors.textSecondary,
   },
+  verifiedContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 2,
+  },
+  verifiedIcon: {
+    marginLeft: 6,
+    marginRight: 4,
+  },
   verified: {
+    fontSize: fontSize.xs,
     color: colors.success,
     fontWeight: "500",
   },
@@ -64,6 +90,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  emptyListContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
   },
   headerText: {
     fontSize: fontSize.lg,

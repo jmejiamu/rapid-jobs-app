@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,13 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 import io from "socket.io-client";
 
 import { JobCard } from "@/src/components/JobCard";
 import { MainButton } from "@/src/components/MainButton";
+import { EmptyState } from "@/src/components/EmptyState";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
 import { API_SOCKET_URL, API_URL } from "@/config/api";
@@ -45,6 +47,7 @@ const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const [refreshing, setRefreshing] = useState(false);
   const filters = ["All", "Cleaning", "Gardening", "Painting"];
 
   const requestJobs = async (jobId: string) => {
@@ -126,6 +129,20 @@ const HomeScreen: React.FC = () => {
     dispatch(logout());
     await persistor.purge();
     navigation.navigate("Login");
+  };
+
+  // Pull to refresh handler
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      resetData();
+      await fetchData(1, searchQuery);
+      await fetchCount();
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   return (
@@ -219,14 +236,38 @@ const HomeScreen: React.FC = () => {
             );
           }}
           keyExtractor={(item, index) => item._id + index.toString()}
-          contentContainerStyle={styles.flatListContent}
+          contentContainerStyle={
+            jobs.length === 0 ? styles.emptyListContent : styles.flatListContent
+          }
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+              progressBackgroundColor={colors.surface}
+            />
+          }
           onEndReached={() => {
             if (currentPage < totalPages && !loadingMore) {
               fetchData(currentPage + 1);
             }
           }}
           onEndReachedThreshold={0.5}
+          ListEmptyComponent={() =>
+            !loading ? (
+              <EmptyState
+                icon="briefcase-search-outline"
+                title="No jobs available"
+                description={
+                  searchQuery
+                    ? "No jobs found matching your search. Try different keywords or filters."
+                    : "There are no jobs posted yet. Check back later or be the first to post a job!"
+                }
+              />
+            ) : null
+          }
           ListFooterComponent={() =>
             loadingMore ? (
               <View style={styles.footerLoader}>
@@ -314,6 +355,10 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     padding: 16,
+  },
+  emptyListContent: {
+    flexGrow: 1,
+    justifyContent: "center",
   },
   jobActions: {
     flexDirection: "row",

@@ -15,7 +15,7 @@ import { RootState } from "@/src/redux/store";
 import { useSelector } from "react-redux";
 
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
-import { JobCard, MainButton } from "@/src/components";
+import { JobCard, MainButton, EmptyState } from "@/src/components";
 import { PostJobType } from "@/src/types/postjob";
 import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
@@ -44,6 +44,20 @@ const ProfileScreen = () => {
     }, [])
   );
   const isLoggedIn = !!token;
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!username) return "U";
+    const names = username.trim().split(" ").filter(name => name.length > 0);
+    
+    if (names.length >= 2) {
+      // Nombre + Apellido o más: primera letra de cada uno
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    
+    // Un solo nombre: solo la primera letra
+    return names[0][0].toUpperCase();
+  };
 
   if (!isLoggedIn) {
     return (
@@ -88,13 +102,22 @@ const ProfileScreen = () => {
           />
         </TouchableOpacity>
         <View style={styles.rowContainer}>
-          <View style={styles.avatar} />
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{getUserInitials()}</Text>
+          </View>
 
           <View style={styles.infoContainer}>
             <Text style={styles.userName}>{username}</Text>
-            <Text style={styles.userDetails}>
-              {phone} <Text style={styles.verified}>| verified</Text>
-            </Text>
+            <View style={styles.verifiedContainer}>
+              <Text style={styles.userDetails}>{phone}</Text>
+              <MaterialIcons
+                name="verified"
+                size={16}
+                color={colors.success}
+                style={styles.verifiedIcon}
+              />
+              <Text style={styles.verified}>Verified</Text>
+            </View>
           </View>
         </View>
 
@@ -123,7 +146,16 @@ const ProfileScreen = () => {
                 </Pressable>
               );
             }}
-            ListEmptyComponent={<Text>No jobs found.</Text>}
+            contentContainerStyle={
+              data.length === 0 ? styles.emptyListContainer : undefined
+            }
+            ListEmptyComponent={
+              <EmptyState
+                icon="briefcase-outline"
+                title="You haven't posted any jobs yet"
+                description="Create your first job post and start finding workers for your projects"
+              />
+            }
             ListHeaderComponent={
               <>
                 {data?.length > 0 && (
@@ -131,7 +163,6 @@ const ProfileScreen = () => {
                 )}
               </>
             }
-            // Pagination: fetch more data when reaching end
             onEndReached={() => {
               if (!loadingMore && currentPage < totalPages) {
                 fetchData(currentPage + 1);
