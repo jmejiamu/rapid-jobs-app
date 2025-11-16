@@ -40,6 +40,7 @@ const HomeScreen: React.FC = () => {
     fetchData,
     resetData,
     addNewItem,
+    removeItem,
   } = usePagination<PostJobType>();
   const socket = io(API_SOCKET_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -101,6 +102,16 @@ const HomeScreen: React.FC = () => {
       socket.disconnect();
     };
   }, [addNewItem]);
+
+  useEffect(() => {
+    socket.on("jobDeleted", (jobId) => {
+      removeItem?.(jobId._id);
+    });
+    return () => {
+      socket.off("jobDeleted");
+      socket.disconnect();
+    };
+  }, [removeItem]);
 
   useEffect(() => {
     fetchCount();
