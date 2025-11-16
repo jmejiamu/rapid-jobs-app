@@ -40,7 +40,7 @@ const DetailJobScreen = () => {
     job.images && job.images.length > 0
       ? job.images[0].lg || job.images[0].original
       : undefined;
-  const galleryImages = job.images && job.images.length > 1 ? job.images : [];
+  const galleryImages = job.images && job.images.length >= 1 ? job.images : [];
 
   const handleChatPress = () => {
     navigation.navigate("ChatDetail", {

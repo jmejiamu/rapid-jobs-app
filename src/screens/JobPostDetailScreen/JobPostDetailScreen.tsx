@@ -23,7 +23,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   MaterialIcons,
   EvilIcons,
-  AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
@@ -56,7 +55,7 @@ const JobPostDetailScreen = () => {
     job.images && job.images.length > 0
       ? job.images[0].lg || job.images[0].original
       : undefined;
-  const galleryImages = job.images && job.images.length > 1 ? job.images : [];
+  const galleryImages = job.images && job.images.length >= 1 ? job.images : [];
 
   const handleImagePress = (imgUrl: string) => {
     setSelectedImage(imgUrl);
@@ -254,11 +253,7 @@ const JobPostDetailScreen = () => {
             <Text style={{ color: "white", fontSize: 18 }}>Close</Text>
           </TouchableOpacity>
           {selectedImage && (
-            <Image
-              source={{ uri: selectedImage }}
-              style={styles.modalImg}
-              contentFit="contain"
-            />
+            <Image source={{ uri: selectedImage }} style={styles.modalImg} />
           )}
         </View>
       </Modal>

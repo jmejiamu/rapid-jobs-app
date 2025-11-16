@@ -15,7 +15,7 @@ import JobPostDetailScreen from "../screens/JobPostDetailScreen/JobPostDetailScr
 export type RootStackParamList = {
   Onboarding: undefined;
   MainApp: undefined;
-  PostJob: undefined;
+  PostJob: { job?: PostJobType } | undefined;
   Register: undefined;
   Login: undefined;
   Request: undefined;
