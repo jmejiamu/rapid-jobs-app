@@ -20,6 +20,7 @@ interface UsePaginationReturn<T = any> {
   fetchData: (page?: number, searchQuery?: string) => Promise<void>;
   resetData: () => void;
   addNewItem: (newItem: T) => void;
+  removeItem?: (itemId: string) => void;
 }
 
 export const usePagination = <T = any,>(
@@ -89,6 +90,10 @@ export const usePagination = <T = any,>(
     setData((prevData) => [newItem, ...prevData]);
   }, []);
 
+  const removeItem = useCallback((itemId: string) => {
+    setData((prevData) => prevData.filter((item: any) => item._id !== itemId)); // Cast item to any to access _id
+  }, []);
+
   return {
     data,
     loading,
@@ -98,5 +103,6 @@ export const usePagination = <T = any,>(
     fetchData,
     resetData,
     addNewItem,
+    removeItem,
   };
 };
