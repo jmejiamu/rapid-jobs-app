@@ -48,13 +48,16 @@ const ProfileScreen = () => {
   // Get user initials for avatar
   const getUserInitials = () => {
     if (!username) return "U";
-    const names = username.trim().split(" ").filter(name => name.length > 0);
-    
+    const names = username
+      .trim()
+      .split(" ")
+      .filter((name) => name.length > 0);
+
     if (names.length >= 2) {
       // Nombre + Apellido o más: primera letra de cada uno
       return `${names[0][0]}${names[1][0]}`.toUpperCase();
     }
-    
+
     // Un solo nombre: solo la primera letra
     return names[0][0].toUpperCase();
   };

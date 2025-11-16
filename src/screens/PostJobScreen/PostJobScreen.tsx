@@ -47,12 +47,13 @@ const PostJobScreen = () => {
   });
 
   const onSubmit = async (data: PostJobType) => {
+    const filteredImages = images.filter((img) => img != null);
     const body = {
       title: data.title,
       pay: data.pay,
       address: data.address,
       description: data.description,
-      images: images,
+      images: filteredImages,
     };
     try {
       const response = await fetch(`${API_URL}/jobs/create-job`, {

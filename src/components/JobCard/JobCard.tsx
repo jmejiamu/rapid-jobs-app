@@ -18,11 +18,11 @@ export const JobCard = ({ job }: { job: PostJobType }) => {
     if (!job.postedAt) return "Today 2-4 pm";
     const date = new Date(job.postedAt);
     const today = new Date();
-    
+
     if (date.toDateString() === today.toDateString()) {
       return "Today 2-4 pm";
     }
-    
+
     return date.toLocaleDateString();
   };
 
@@ -35,28 +35,26 @@ export const JobCard = ({ job }: { job: PostJobType }) => {
         <Text style={styles.address}>address - {job.address}</Text>
       )}
       {/* Display images if available */}
-      // ... existing code ...
-
-{/* Display images if available */}
-{Array.isArray(job.images) && job.images.length > 0 && (
-  <View style={styles.rowContainer}>
-    {job.images
-      .filter((img) => img && (img.sm || img.lg || img.original)) // Filtrar imágenes inválidas
-      .map((img, idx) => (
-        <TouchableOpacity
-          key={idx}
-          onPress={() => handleImagePress(img.lg || img.sm || img.original)}
-        >
-          <Image
-            source={{ uri: img.sm || img.lg || img.original }}
-            style={styles.image}
-            contentFit="cover"
-          />
-        </TouchableOpacity>
-      ))}
-  </View>
-)}
-
+      {Array.isArray(job.images) && job.images.length > 0 && (
+        <View style={styles.rowContainer}>
+          {job.images
+            .filter((img) => img && (img.sm || img.lg || img.original)) // Filtrar imágenes inválidas
+            .map((img, idx) => (
+              <TouchableOpacity
+                key={idx}
+                onPress={() =>
+                  handleImagePress(img.lg || img.sm || img.original)
+                }
+              >
+                <Image
+                  source={{ uri: img.sm || img.lg || img.original }}
+                  style={styles.image}
+                  contentFit="cover"
+                />
+              </TouchableOpacity>
+            ))}
+        </View>
+      )}
       {/* Modal for full-size image */}
       <Modal
         visible={modalVisible}
