@@ -65,6 +65,12 @@ const RegistrationScreen = () => {
       }
 
       const data = await response.json();
+      if (data.token) {
+        dispatch(setUserData(data));
+        navigation.navigate("MainApp");
+        return;
+      }
+
       if (data.success) {
         setSuccess(true);
       }

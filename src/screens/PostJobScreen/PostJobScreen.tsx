@@ -94,87 +94,136 @@ const PostJobScreen = () => {
     });
   };
 
+  const uploadedCount = images.filter((image) => Boolean(image)).length;
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginHorizontal: 16 }}>
+      <View style={styles.contentWrapper}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialIcons name="keyboard-arrow-left" size={35} color="black" />
         </TouchableOpacity>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.header}>Post a Job</Text>
-
-          <CustomInput
-            control={control}
-            name="title"
-            placeholder="Job Title"
-            error={errors.title?.message}
-          />
-
-          <CustomInput
-            control={control}
-            name="pay"
-            placeholder="Pay (Cash)"
-            error={errors.pay?.message}
-            keyboardType="numeric"
-          />
-
-          <CustomInput
-            control={control}
-            name="address"
-            placeholder="Address"
-            error={errors.address?.message}
-          />
-
-          <CustomInput
-            control={control}
-            name="description"
-            placeholder="Description"
-            error={errors.description?.message}
-            multiline
-            numberOfLines={4}
-          />
-
-          <Text style={styles.label}>Upload Images (max 4)</Text>
-          <View style={{ flexDirection: "row" }}>
-            {[0, 1].map((index) => (
-              <ImageUploader
-                key={index}
-                image={images[index]}
-                setModalVisible={() => handleModal(index)}
-                loadingImage={loadingImages[index]}
-                setLoadingImage={(loading) => {
-                  handleLoading(index, loading);
-                }}
-                stylesContainer={index === 0 ? { marginRight: 12 } : {}}
-                onDeleteImage={() => {
-                  handleDelete(index);
-                }}
-              />
-            ))}
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            {[2, 3].map((index) => (
-              <ImageUploader
-                key={index}
-                image={images[index]}
-                setModalVisible={() => handleModal(index)}
-                loadingImage={loadingImages[index]}
-                setLoadingImage={(loading) => {
-                  handleLoading(index, loading);
-                }}
-                stylesContainer={index === 2 ? { marginRight: 12 } : {}}
-                onDeleteImage={() => {
-                  handleDelete(index);
-                }}
-              />
-            ))}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+        >
+          <View style={styles.headerWrapper}>
+            <Text style={styles.header}>Post a Job</Text>
+            <Text style={styles.subHeader}>
+              Describe the task with clarity so pros can respond fast.
+            </Text>
+            <View style={styles.badgeRow}>
+              <View style={styles.infoChip}>
+                <Text style={styles.infoChipText}>Average match &lt; 1hr</Text>
+              </View>
+              <View style={styles.infoChip}>
+                <Text style={styles.infoChipText}>Up to 4 photos</Text>
+              </View>
+            </View>
           </View>
 
-          <View style={{ marginBottom: 50 }}>
-            <MainButton title="Post Job" onPress={handleSubmit(onSubmit)} />
+          <View style={styles.formCard}>
+            <Text style={styles.sectionTitle}>Job details</Text>
+            <Text style={styles.sectionSubtitle}>
+              Provide the essentials. Clear details lead to better applicants.
+            </Text>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.inputLabel}>Job title</Text>
+              <CustomInput
+                control={control}
+                name="title"
+                placeholder="e.g. Furniture assembly"
+                error={errors.title?.message}
+              />
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.inputLabel}>Budget</Text>
+              <CustomInput
+                control={control}
+                name="pay"
+                placeholder="Pay (Cash)"
+                error={errors.pay?.message}
+                keyboardType="numeric"
+              />
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.inputLabel}>Location</Text>
+              <CustomInput
+                control={control}
+                name="address"
+                placeholder="Address"
+                error={errors.address?.message}
+              />
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.inputLabel}>Description</Text>
+              <CustomInput
+                control={control}
+                name="description"
+                placeholder="Share timing, scope, tools required..."
+                error={errors.description?.message}
+                multiline
+                numberOfLines={4}
+              />
+            </View>
+          </View>
+
+          <View style={styles.formCard}>
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.sectionTitle}>Visual references</Text>
+              <Text style={styles.sectionCount}>{uploadedCount}/4</Text>
+            </View>
+            <Text style={styles.sectionSubtitle}>
+              Upload inspiration or on-site photos so professionals know what to
+              expect.
+            </Text>
+
+            <View style={styles.imageGrid}>
+              <View style={styles.imageRow}>
+                {[0, 1].map((index) => (
+                  <ImageUploader
+                    key={index}
+                    image={images[index]}
+                    setModalVisible={() => handleModal(index)}
+                    loadingImage={loadingImages[index]}
+                    setLoadingImage={(loading) => {
+                      handleLoading(index, loading);
+                    }}
+                    stylesContainer={index === 0 ? { marginRight: 12 } : {}}
+                    onDeleteImage={() => {
+                      handleDelete(index);
+                    }}
+                  />
+                ))}
+              </View>
+              <View style={styles.imageRow}>
+                {[2, 3].map((index) => (
+                  <ImageUploader
+                    key={index}
+                    image={images[index]}
+                    setModalVisible={() => handleModal(index)}
+                    loadingImage={loadingImages[index]}
+                    setLoadingImage={(loading) => {
+                      handleLoading(index, loading);
+                    }}
+                    stylesContainer={index === 2 ? { marginRight: 12 } : {}}
+                    onDeleteImage={() => {
+                      handleDelete(index);
+                    }}
+                  />
+                ))}
+              </View>
+            </View>
           </View>
         </ScrollView>
+
+        <View style={styles.submitWrapper}>
+          <MainButton title="Post Job" onPress={handleSubmit(onSubmit)} />
+        </View>
       </View>
 
       <ImagePickerModal
