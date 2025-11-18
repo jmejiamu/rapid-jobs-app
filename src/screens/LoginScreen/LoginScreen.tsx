@@ -95,7 +95,7 @@ const LoginScreen = () => {
                     defaultValues={{
                       countryCode: "US",
                       callingCode: "+1",
-                      phoneNumber: "+123456789",
+                      phoneNumber: "+1",
                     }}
                     value={value}
                     onChangeText={(text) => onChange(text.toString())}
