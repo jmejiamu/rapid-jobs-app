@@ -23,6 +23,7 @@ import { fontSize } from "@/src/theme/fontStyle";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { Rooms } from "@/src/types/Rooms";
+import { MainButton } from "@/src/components";
 
 const ChatList = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -142,6 +143,45 @@ const ChatList = () => {
       )}
     </View>
   );
+
+  if (!token) {
+    return (
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Messages</Text>
+            <Text style={styles.subtitle}>
+              Please log in to view your conversations.
+            </Text>
+          </View>
+          <View style={styles.stateContainer}>
+            <AntDesign
+              name="user"
+              size={42}
+              color={colors.textSecondary}
+              style={styles.stateIcon}
+            />
+            <Text style={styles.stateTitle}>You're not logged in</Text>
+            <Text style={styles.stateSubtitle}>
+              Log in or register to start chatting.
+            </Text>
+            <View style={styles.buttonContainer}>
+              <MainButton
+                title="Log In"
+                onPress={() => navigation.navigate("Login")}
+              />
+
+              <MainButton
+                title="Register"
+                variant="secondary"
+                onPress={() => navigation.navigate("Register")}
+              />
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
@@ -322,5 +362,38 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     fontWeight: "600",
     color: "white",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 8,
+  },
+  loginButton: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+  },
+  loginButtonText: {
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    color: "white",
+  },
+  registerButton: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    alignItems: "center",
+  },
+  registerButtonText: {
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    color: colors.primary,
   },
 });

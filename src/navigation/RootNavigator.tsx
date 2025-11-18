@@ -11,6 +11,8 @@ import { PostJobType } from "../types/postjob";
 import ChatList from "../screens/ChatList/ChatList";
 import { RoomDetails, Rooms } from "../types/Rooms";
 import JobPostDetailScreen from "../screens/JobPostDetailScreen/JobPostDetailScreen";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -29,6 +31,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
   const { isOnboardingComplete, setOnboardingComplete } = useOnboarding();
+  const token = useSelector((state: RootState) => state.auth.token);
 
   const handleOnboardingComplete = () => {
     setOnboardingComplete(true);
@@ -41,7 +44,7 @@ const RootNavigator: React.FC = () => {
         gestureEnabled: false,
       }}
     >
-      {!isOnboardingComplete ? (
+      {!token && !isOnboardingComplete ? (
         <Stack.Screen name="Onboarding">
           {(props) => (
             <OnboardingScreen
@@ -50,19 +53,16 @@ const RootNavigator: React.FC = () => {
             />
           )}
         </Stack.Screen>
-      ) : (
-        <>
-          <Stack.Screen name="MainApp" component={BottomTabNavigator} />
-          <Stack.Screen name="PostJob" component={PostJobScreen} />
-          <Stack.Screen name="Register" component={RegistrationScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Request" component={RequestScreen} />
-          <Stack.Screen name="DetailJob" component={DetailJobScreen} />
-          <Stack.Screen name="ChatList" component={ChatList} />
-          <Stack.Screen name="ChatDetail" component={ChatScreen} />
-          <Stack.Screen name="JobPostDetail" component={JobPostDetailScreen} />
-        </>
-      )}
+      ) : null}
+      <Stack.Screen name="MainApp" component={BottomTabNavigator} />
+      <Stack.Screen name="PostJob" component={PostJobScreen} />
+      <Stack.Screen name="Register" component={RegistrationScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Request" component={RequestScreen} />
+      <Stack.Screen name="DetailJob" component={DetailJobScreen} />
+      <Stack.Screen name="ChatList" component={ChatList} />
+      <Stack.Screen name="ChatDetail" component={ChatScreen} />
+      <Stack.Screen name="JobPostDetail" component={JobPostDetailScreen} />
     </Stack.Navigator>
   );
 };
