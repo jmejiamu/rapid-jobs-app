@@ -150,7 +150,7 @@ const ProfileScreen = () => {
               );
             }}
             contentContainerStyle={
-              data.length === 0 ? styles.emptyListContainer : undefined
+              data?.length === 0 ? styles?.emptyListContainer : undefined
             }
             ListEmptyComponent={
               <EmptyState

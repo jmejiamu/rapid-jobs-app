@@ -59,7 +59,6 @@ const ChatList = () => {
         setChatRooms(data.rooms ?? []);
         setError(null);
       } catch (err) {
-        console.error("Error loading chat rooms:", err);
         setError(
           err instanceof Error
             ? err.message
