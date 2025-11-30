@@ -72,7 +72,7 @@ const HomeScreen: React.FC = () => {
       const response = await apiFetch(`/jobs/request-count`, {
         method: "GET",
       });
-      const countData = await response.json();
+      const countData = await response?.json();
       dispatch(setCount(countData.requestCount || 0));
     } catch (error) {
       console.error("Error fetching job count:", error);
