@@ -29,7 +29,7 @@ const PostJobScreen = () => {
     false,
     false,
   ]);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const {
@@ -60,7 +60,7 @@ const PostJobScreen = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(body),
       });

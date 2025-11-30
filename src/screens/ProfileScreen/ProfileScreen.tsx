@@ -33,7 +33,7 @@ const ProfileScreen = () => {
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const username = useSelector((state: RootState) => state.auth.name);
   const phone = useSelector((state: RootState) => state.auth.phone);
   const count = useSelector((state: RootState) => state.count.value);
@@ -43,7 +43,7 @@ const ProfileScreen = () => {
       fetchData();
     }, [])
   );
-  const isLoggedIn = !!token;
+  const isLoggedIn = !!accessToken;
 
   // Get user initials for avatar
   const getUserInitials = () => {

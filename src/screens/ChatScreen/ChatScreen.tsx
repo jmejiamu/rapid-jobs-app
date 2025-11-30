@@ -37,6 +37,7 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { apiFetch } from "@/src/utils/apiFetch";
 
 type DetailJobRouteProp = RouteProp<RootStackParamList, "ChatDetail">;
 
@@ -47,7 +48,7 @@ const ChatScreen: React.FC = () => {
   const route = useRoute<DetailJobRouteProp>();
   const { job } = route.params ?? {};
 
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const [messages, setMessages] = useState("");
   const [newMessage, setNewMessage] = useState<
@@ -77,7 +78,7 @@ const ChatScreen: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(payload),
       });
@@ -95,11 +96,10 @@ const ChatScreen: React.FC = () => {
 
     try {
       setLoading(true);
-      const res = await fetch(
-        `${API_URL}/chat/history/${job.jobId}/${job.otherUserId}`,
+      const res = await apiFetch(
+        `/chat/history/${job.jobId}/${job.otherUserId}`,
         {
           method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

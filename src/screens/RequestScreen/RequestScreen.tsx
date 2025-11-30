@@ -17,22 +17,20 @@ import { MainButton } from "@/src/components";
 import { colors } from "@/src/theme/colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import io from "socket.io-client";
+import { apiFetch } from "@/src/utils/apiFetch";
 
 const RequestScreen = () => {
   const socket = io(API_SOCKET_URL);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const [requestedJobs, setRequestedJobs] = useState<RequestedJob[]>([]);
 
   const getRequestedJobs = async () => {
     try {
-      const response = await fetch(`${API_URL}/jobs/my-requests`, {
+      const response = await apiFetch(`/jobs/my-requests`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
       const job = await response.json();
       setRequestedJobs(job.requestedJobs);
@@ -48,7 +46,7 @@ const RequestScreen = () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -65,7 +63,7 @@ const RequestScreen = () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );

@@ -24,10 +24,11 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { Rooms } from "@/src/types/Rooms";
 import { MainButton } from "@/src/components";
+import { apiFetch } from "@/src/utils/apiFetch";
 
 const ChatList = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const userId = useSelector((state: RootState) => state.auth.userId);
 
   const [chatRooms, setChatRooms] = useState<Rooms[]>([]);
@@ -37,7 +38,7 @@ const ChatList = () => {
 
   const fetchChatRooms = useCallback(
     async (isRefreshing = false) => {
-      if (!token) return;
+      if (!accessToken) return;
 
       try {
         if (isRefreshing) {
@@ -46,12 +47,11 @@ const ChatList = () => {
           setLoading(true);
         }
 
-        const response = await fetch(`${API_URL}/chat/rooms`, {
+        const response = await apiFetch(`/chat/rooms`, {
           method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!response.ok) {
+        if (!response?.ok) {
           throw new Error("Unable to load your conversations right now.");
         }
 
@@ -72,7 +72,7 @@ const ChatList = () => {
         }
       }
     },
-    [token]
+    [accessToken]
   );
 
   useFocusEffect(
@@ -143,7 +143,7 @@ const ChatList = () => {
     </View>
   );
 
-  if (!token) {
+  if (!accessToken) {
     return (
       <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
         <View style={styles.container}>

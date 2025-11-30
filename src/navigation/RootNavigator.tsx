@@ -31,7 +31,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
   const { isOnboardingComplete, setOnboardingComplete } = useOnboarding();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const handleOnboardingComplete = () => {
     setOnboardingComplete(true);
@@ -44,7 +44,7 @@ const RootNavigator: React.FC = () => {
         gestureEnabled: false,
       }}
     >
-      {!token && !isOnboardingComplete ? (
+      {!accessToken && !isOnboardingComplete ? (
         <Stack.Screen name="Onboarding">
           {(props) => (
             <OnboardingScreen
