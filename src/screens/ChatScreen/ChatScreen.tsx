@@ -103,7 +103,7 @@ const ChatScreen: React.FC = () => {
         }
       );
 
-      if (!res.ok) {
+      if (!res?.ok) {
         throw new Error("Unable to load messages. Please try again.");
       }
 
