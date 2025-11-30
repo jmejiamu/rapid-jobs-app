@@ -36,7 +36,7 @@ const JobPostDetailScreen = () => {
   const route = useRoute<DetailJobRouteProp>();
   const { job } = route.params ?? {};
   const userId = useSelector((state: RootState) => state.auth.userId);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -78,7 +78,7 @@ const JobPostDetailScreen = () => {
                 {
                   method: "DELETE",
                   headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${accessToken}`,
                   },
                 }
               );

@@ -65,7 +65,7 @@ const RegistrationScreen = () => {
       }
 
       const data = await response.json();
-      if (data.token) {
+      if (data.accessToken) {
         dispatch(setUserData(data));
         navigation.navigate("MainApp");
         return;
@@ -103,7 +103,7 @@ const RegistrationScreen = () => {
       }
 
       const data = await response.json();
-      if (data.token) {
+      if (data.accessToken) {
         dispatch(setUserData(data));
         navigation.navigate("MainApp");
       }

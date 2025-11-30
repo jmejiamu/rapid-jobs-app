@@ -29,6 +29,7 @@ import { AppDispatch, persistor, RootState } from "@/src/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/src/redux/authSlice";
 import { setCount } from "@/src/redux/countSlice";
+import { apiFetch } from "@/src/utils/apiFetch";
 
 const HomeScreen: React.FC = () => {
   const {
@@ -44,7 +45,7 @@ const HomeScreen: React.FC = () => {
   } = usePagination<PostJobType>();
   const socket = io(API_SOCKET_URL);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -56,7 +57,7 @@ const HomeScreen: React.FC = () => {
       const response = await fetch(`${API_URL}/jobs/request-job/${jobId}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -68,11 +69,8 @@ const HomeScreen: React.FC = () => {
 
   const fetchCount = async () => {
     try {
-      const response = await fetch(`${API_URL}/jobs/request-count`, {
+      const response = await apiFetch(`/jobs/request-count`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
       const countData = await response.json();
       dispatch(setCount(countData.requestCount || 0));
@@ -163,7 +161,7 @@ const HomeScreen: React.FC = () => {
       {/* Add Logout Button in Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Rapid Jobs</Text>
-        {token && (
+        {accessToken && (
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
             <AntDesign name="logout" size={24} color={colors.error} />
           </TouchableOpacity>

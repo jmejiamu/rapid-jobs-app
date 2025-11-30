@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
 import { API_URL } from "@/config/api";
+import { apiFetch } from "../utils/apiFetch";
 
 interface UsePaginationOptions<T = any> {
   endpoint?: string;
@@ -33,7 +34,7 @@ export const usePagination = <T = any,>(
     dataKey = "jobs",
     paginationKey = "pagination",
   } = options;
-  const token = useSelector((state: RootState) => state.auth.token);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -42,7 +43,7 @@ export const usePagination = <T = any,>(
 
   const fetchData = useCallback(
     async (page: number = 1, searchQuery: string = "") => {
-      if (dataKey === "myJobs" && !token) return;
+      if (dataKey === "myJobs" && !accessToken) return;
       if (page === 1) setLoading(true);
       else setLoadingMore(true);
 
@@ -53,14 +54,11 @@ export const usePagination = <T = any,>(
         }
         url.searchParams.set(pageParam, page.toString());
 
-        const response = await fetch(url.toString(), {
+        const response = await apiFetch(url.toString(), {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         });
 
-        const responseData = await response.json();
+        const responseData = await response?.json();
 
         if (page === 1) {
           setData(responseData[dataKey]);
@@ -77,7 +75,7 @@ export const usePagination = <T = any,>(
         setLoadingMore(false);
       }
     },
-    [token, endpoint, searchParam, pageParam, dataKey, paginationKey]
+    [accessToken, endpoint, searchParam, pageParam, dataKey, paginationKey]
   );
 
   const resetData = useCallback(() => {
