@@ -11,17 +11,17 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
 import { RootState } from "@/src/redux/store";
 import { useSelector } from "react-redux";
 
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { JobCard, MainButton, EmptyState } from "@/src/components";
 import { PostJobType } from "@/src/types/postjob";
-import { colors } from "@/src/theme/colors";
-import { styles } from "./styles/styles";
 import { fontSize } from "@/src/theme/fontStyle";
 import { usePagination } from "@/src/hooks";
-import { MaterialIcons } from "@expo/vector-icons";
+import { colors } from "@/src/theme/colors";
+import { styles } from "./styles/styles";
 
 const ProfileScreen = () => {
   const { data, loading, loadingMore, currentPage, totalPages, fetchData } =

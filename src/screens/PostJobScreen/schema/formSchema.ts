@@ -4,4 +4,5 @@ export const schema = z.object({
   pay: z.string().min(1, "Pay is required"),
   address: z.string().min(1, "Address is required"),
   description: z.string().min(1, "Description is required"),
+  category: z.string().min(1, "Category is required"),
 });

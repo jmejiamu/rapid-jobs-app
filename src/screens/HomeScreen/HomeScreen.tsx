@@ -48,9 +48,18 @@ const HomeScreen: React.FC = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
-  const filters = ["All", "Cleaning", "Gardening", "Painting"];
+  const filters = [
+    "All",
+    "Cleaning",
+    "Gardening",
+    "Painting",
+    "Moving",
+    "Repairs",
+    "Assembly",
+    "Other",
+  ];
 
   const requestJobs = async (jobId: string) => {
     try {
@@ -83,12 +92,16 @@ const HomeScreen: React.FC = () => {
   useEffect(() => {
     resetData();
     const handler = setTimeout(() => {
-      fetchData(1, searchQuery);
+      // fetchData(1, searchQuery);
+      fetchData(1, {
+        title: searchQuery,
+        category: selectedFilter.toLowerCase(),
+      });
     }, 350); // 350ms debounce
     return () => {
       clearTimeout(handler);
     };
-  }, [searchQuery, fetchData, resetData]);
+  }, [searchQuery, selectedFilter, fetchData, resetData]);
 
   useEffect(() => {
     socket.on("jobCreated", (newJob) => {

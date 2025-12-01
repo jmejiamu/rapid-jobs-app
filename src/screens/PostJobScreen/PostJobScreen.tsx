@@ -4,8 +4,10 @@ import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Dropdown } from "react-native-element-dropdown";
 import { useNavigation } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
@@ -15,10 +17,21 @@ import { ImageObject } from "@/src/types/imgUploader";
 import { PostJobType } from "@/src/types/postjob";
 import { RootState } from "@/src/redux/store";
 import { schema } from "./schema/formSchema";
+import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
 import { API_URL } from "@/config/api";
 
 const PostJobScreen = () => {
+  const categoryData = [
+    { label: "Cleaning", value: "cleaning" },
+    { label: "Gardening", value: "gardening" },
+    { label: "Painting", value: "painting" },
+    { label: "Moving", value: "moving" },
+    { label: "Repairs", value: "repairs" },
+    { label: "Assembly", value: "assembly" },
+    { label: "Other", value: "other" },
+  ];
+  const [category, setCategory] = useState<string>("");
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [images, setImages] = useState<ImageObject[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,6 +56,7 @@ const PostJobScreen = () => {
       pay: "",
       address: "",
       description: "",
+      category: "",
     },
   });
 
@@ -54,6 +68,7 @@ const PostJobScreen = () => {
       address: data.address,
       description: data.description,
       images: filteredImages,
+      category: data.category,
     };
     try {
       const response = await fetch(`${API_URL}/jobs/create-job`, {
@@ -169,6 +184,30 @@ const PostJobScreen = () => {
                 multiline
                 numberOfLines={4}
               />
+            </View>
+            <View style={styles.fieldGroup}>
+              <Text style={styles.inputLabel}>Category</Text>
+
+              <Controller
+                control={control}
+                name="category"
+                render={({ field: { onChange, value } }) => (
+                  <Dropdown
+                    style={styles.dropdown}
+                    data={categoryData}
+                    labelField="label"
+                    valueField="value"
+                    placeholder="Select category"
+                    placeholderStyle={{ color: colors.textSecondary }}
+                    iconStyle={{ tintColor: colors.textSecondary }}
+                    value={value}
+                    onChange={(item) => onChange(item.value)}
+                  />
+                )}
+              />
+              {errors.category && (
+                <Text style={styles.errorText}>{errors.category.message}</Text>
+              )}
             </View>
           </View>
 
