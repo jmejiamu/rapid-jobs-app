@@ -11,6 +11,18 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: fontSize.xs,
+    marginTop: 4,
+  },
   scrollContainer: {
     paddingBottom: 140,
   },

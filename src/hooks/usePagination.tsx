@@ -18,7 +18,10 @@ interface UsePaginationReturn<T = any> {
   loadingMore: boolean;
   currentPage: number;
   totalPages: number;
-  fetchData: (page?: number, searchQuery?: string) => Promise<void>;
+  fetchData: (
+    page?: number,
+    searchQueries?: Record<string, string>
+  ) => Promise<void>;
   resetData: () => void;
   addNewItem: (newItem: T) => void;
   removeItem?: (itemId: string) => void;
@@ -42,16 +45,16 @@ export const usePagination = <T = any,>(
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchData = useCallback(
-    async (page: number = 1, searchQuery: string = "") => {
+    async (page: number = 1, searchQueries: Record<string, string> = {}) => {
       if (dataKey === "myJobs" && !accessToken) return;
       if (page === 1) setLoading(true);
       else setLoadingMore(true);
 
       try {
         const url = new URL(`${API_URL}${endpoint}`);
-        if (searchQuery) {
-          url.searchParams.set(searchParam, searchQuery);
-        }
+        Object.entries(searchQueries).forEach(([key, value]) => {
+          if (value && value !== "all") url.searchParams.set(key, value); // Skip "All" to fetch all
+        });
         url.searchParams.set(pageParam, page.toString());
 
         const response = await apiFetch(url.toString(), {
