@@ -26,7 +26,6 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { AppDispatch, persistor, RootState } from "@/src/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/src/redux/authSlice";
 import { setCount } from "@/src/redux/countSlice";
 import { apiFetch } from "@/src/utils/apiFetch";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -146,13 +145,6 @@ const HomeScreen: React.FC = () => {
     };
   }, []);
 
-  // Logout handler
-  const handleLogout = async () => {
-    dispatch(logout());
-    await persistor.purge();
-    navigation.navigate("Login");
-  };
-
   // Pull to refresh handler
   const onRefresh = async () => {
     setRefreshing(true);
@@ -174,11 +166,6 @@ const HomeScreen: React.FC = () => {
       {/* Add Logout Button in Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Rapid Jobs</Text>
-        {accessToken && (
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <AntDesign name="logout" size={24} color={colors.error} />
-          </TouchableOpacity>
-        )}
       </View>
       <View style={styles.searchContainer}>
         {/* Search Input */}
