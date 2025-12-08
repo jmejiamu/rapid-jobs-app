@@ -5,7 +5,6 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   FlatList,
   ActivityIndicator,
@@ -30,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/src/redux/authSlice";
 import { setCount } from "@/src/redux/countSlice";
 import { apiFetch } from "@/src/utils/apiFetch";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen: React.FC = () => {
   const {
@@ -82,7 +82,7 @@ const HomeScreen: React.FC = () => {
         method: "GET",
       });
       const countData = await response?.json();
-      dispatch(setCount(countData.requestCount || 0));
+      dispatch(setCount(countData?.requestCount ?? 0));
     } catch (error) {
       console.error("Error fetching job count:", error);
     }
