@@ -1,16 +1,11 @@
 import React, { useState, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  StatusBar,
-} from "react-native";
+import { View, StyleSheet, FlatList, StatusBar } from "react-native";
 import LottieView from "lottie-react-native";
 import { OnboardingCard, ProgressIndicator } from "../../components/onboarding";
 import { translate } from "../../translation/i18n";
 import { OnboardingSlide } from "../../types/onboarding";
 import { MainButton } from "@/src/components";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface OnboardingScreenProps {
   onComplete: () => void;
