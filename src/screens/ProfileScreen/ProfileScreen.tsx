@@ -26,11 +26,7 @@ import { usePagination } from "@/src/hooks";
 import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
 
-type TabType = "posted" | "activity";
-
 const ProfileScreen = () => {
-  const [activeTab, setActiveTab] = useState<TabType>("posted");
-  
   const { data, loading, loadingMore, currentPage, totalPages, fetchData } =
     usePagination<PostJobType>({
       endpoint: "/jobs/my-jobs",
@@ -128,7 +124,11 @@ const ProfileScreen = () => {
             <Text style={styles.badgeText}>{count}</Text>
           </View>
         )}
-        <MaterialIcons name="chevron-right" size={24} color={colors.textSecondary} />
+        <MaterialIcons
+          name="chevron-right"
+          size={24}
+          color={colors.textSecondary}
+        />
       </View>
     </TouchableOpacity>
   );
@@ -138,7 +138,11 @@ const ProfileScreen = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.notLoggedInContainer}>
           <View style={styles.notLoggedInIconContainer}>
-            <MaterialIcons name="person-outline" size={80} color={colors.textSecondary} />
+            <MaterialIcons
+              name="person-outline"
+              size={80}
+              color={colors.textSecondary}
+            />
           </View>
           <Text style={styles.notLoggedInTitle}>Welcome to Rapid Jobs</Text>
           <Text style={styles.notLoggedInDescription}>
@@ -223,46 +227,45 @@ const ProfileScreen = () => {
         {/* Menu Section */}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>My Activity</Text>
-          
-          {renderMenuItem(
-            "work-outline",
-            "My Posted Jobs",
-            () => setActiveTab("posted")
+
+          {renderMenuItem("work-outline", "My Posted Jobs", () =>
+            navigation.navigate("MyPostedJobs")
           )}
-          
+
           {renderMenuItem(
             "notifications-active",
             "Applications Received",
             () => navigation.navigate("Request"),
             true
           )}
-          
-          {renderMenuItem(
-            "chat-bubble-outline",
-            "Messages",
-            () => navigation.navigate("ChatList")
+
+          {renderMenuItem("chat-bubble-outline", "Messages", () =>
+            navigation.navigate("ChatList")
           )}
 
           <View style={styles.sectionDivider} />
-          
+
           <Text style={styles.sectionTitle}>Account Settings</Text>
-          
-          {renderMenuItem(
-            "person-outline",
-            "Edit Profile",
-            () => Alert.alert("Coming Soon", "Edit profile feature will be available soon")
+
+          {renderMenuItem("person-outline", "Edit Profile", () =>
+            Alert.alert(
+              "Coming Soon",
+              "Edit profile feature will be available soon"
+            )
           )}
-          
-          {renderMenuItem(
-            "settings",
-            "Settings",
-            () => Alert.alert("Coming Soon", "Settings feature will be available soon")
+
+          {renderMenuItem("settings", "Settings", () =>
+            Alert.alert(
+              "Coming Soon",
+              "Settings feature will be available soon"
+            )
           )}
-          
-          {renderMenuItem(
-            "help-outline",
-            "Help & Support",
-            () => Alert.alert("Coming Soon", "Help & Support feature will be available soon")
+
+          {renderMenuItem("help-outline", "Help & Support", () =>
+            Alert.alert(
+              "Coming Soon",
+              "Help & Support feature will be available soon"
+            )
           )}
 
           <View style={styles.sectionDivider} />
@@ -270,16 +273,20 @@ const ProfileScreen = () => {
           {/* Logout Button */}
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <View style={styles.menuItemLeft}>
-              <View style={[styles.menuIconContainer, styles.logoutIconContainer]}>
+              <View
+                style={[styles.menuIconContainer, styles.logoutIconContainer]}
+              >
                 <MaterialIcons name="logout" size={22} color={colors.error} />
               </View>
               <Text style={styles.logoutText}>Log Out</Text>
             </View>
-            <MaterialIcons name="chevron-right" size={24} color={colors.error} />
+            <MaterialIcons
+              name="chevron-right"
+              size={24}
+              color={colors.error}
+            />
           </TouchableOpacity>
         </View>
-
-
 
         {/* Footer Spacing */}
         <View style={styles.footerSpacing} />

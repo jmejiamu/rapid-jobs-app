@@ -95,6 +95,7 @@ const JobPostDetailScreen = () => {
     );
   };
 
+  // TODO: work on update functionality
   const handleUpdate = () => {
     navigation.navigate("PostJob", { job });
   };
