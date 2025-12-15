@@ -13,6 +13,7 @@ import { RoomDetails, Rooms } from "../types/Rooms";
 import JobPostDetailScreen from "../screens/JobPostDetailScreen/JobPostDetailScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import MyPostedJobsScreen from "../screens/MyPostedJobsScreen/MyPostedJobsScreen";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   DetailJob: { job: PostJobType };
   ChatDetail: { job: RoomDetails };
   JobPostDetail: { job: PostJobType };
+  MyPostedJobs: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -63,6 +65,7 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen name="ChatList" component={ChatList} />
       <Stack.Screen name="ChatDetail" component={ChatScreen} />
       <Stack.Screen name="JobPostDetail" component={JobPostDetailScreen} />
+      <Stack.Screen name="MyPostedJobs" component={MyPostedJobsScreen} />
     </Stack.Navigator>
   );
 };

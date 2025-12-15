@@ -399,4 +399,23 @@ export const styles = StyleSheet.create({
   footerSpacing: {
     height: 32,
   },
+
+  rowContainer: {
+    flexDirection: "row",
+    marginBottom: 32,
+  },
+  infoContainer: {
+    justifyContent: "flex-end",
+    marginLeft: 16,
+  },
+  emptyListContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  headerText: {
+    fontSize: fontSize.lg,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginVertical: 16,
+  },
 });
