@@ -32,7 +32,7 @@ const RequestScreen = () => {
       const response = await apiFetch(`/jobs/my-requests`, {
         method: "GET",
       });
-      const job = await response.json();
+      const job = await response?.json();
       setRequestedJobs(job.requestedJobs);
     } catch (error) {
       console.error("Error fetching job details:", error);
