@@ -14,6 +14,7 @@ import JobPostDetailScreen from "../screens/JobPostDetailScreen/JobPostDetailScr
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import MyPostedJobsScreen from "../screens/MyPostedJobsScreen/MyPostedJobsScreen";
+import ApplicationApproved from "../screens/ApplicationApproved/ApplicationApproved";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -27,6 +28,7 @@ export type RootStackParamList = {
   ChatDetail: { job: RoomDetails };
   JobPostDetail: { job: PostJobType };
   MyPostedJobs: undefined;
+  ApplicationApproved: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -66,6 +68,10 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen name="ChatDetail" component={ChatScreen} />
       <Stack.Screen name="JobPostDetail" component={JobPostDetailScreen} />
       <Stack.Screen name="MyPostedJobs" component={MyPostedJobsScreen} />
+      <Stack.Screen
+        name="ApplicationApproved"
+        component={ApplicationApproved}
+      />
     </Stack.Navigator>
   );
 };
