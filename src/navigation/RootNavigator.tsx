@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import MyPostedJobsScreen from "../screens/MyPostedJobsScreen/MyPostedJobsScreen";
 import ApplicationApproved from "../screens/ApplicationApproved/ApplicationApproved";
+import ReviewScreen from "../screens/ReviewScreen/ReviewScreen";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -29,6 +30,13 @@ export type RootStackParamList = {
   JobPostDetail: { job: PostJobType };
   MyPostedJobs: undefined;
   ApplicationApproved: undefined;
+  Review:
+    | {
+        jobId: string;
+        owner: { id: string; name: string };
+        assignee: { id: string; name: string };
+      }
+    | undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -72,6 +80,7 @@ const RootNavigator: React.FC = () => {
         name="ApplicationApproved"
         component={ApplicationApproved}
       />
+      <Stack.Screen name="Review" component={ReviewScreen} />
     </Stack.Navigator>
   );
 };

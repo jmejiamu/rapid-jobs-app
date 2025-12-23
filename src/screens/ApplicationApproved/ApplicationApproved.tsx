@@ -5,7 +5,11 @@ import { API_URL } from "@/config/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
 import { usePagination } from "@/src/hooks";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import {
   FlatList,
   TouchableOpacity,
@@ -14,7 +18,12 @@ import {
   Alert,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { RootStackParamList } from "@/src/navigation/RootNavigator";
 
+type userType = {
+  _id: string;
+  name: string;
+};
 // Add Job type that matches backend response
 type Job = {
   _id: string;
@@ -24,11 +33,11 @@ type Job = {
   description: string;
   images: string[];
   category: string;
-  userId: string;
+  userId: userType;
   status: "approved" | "completed" | string;
   postedAt?: string;
   __v?: number;
-  assignedTo?: string;
+  assignedTo?: userType;
   isOwner?: boolean;
   isAssignee?: boolean;
   canComplete?: boolean;
@@ -36,7 +45,7 @@ type Job = {
 };
 
 const ApplicationApproved = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [markingId, setMarkingId] = useState<string | null>(null);
 
@@ -90,10 +99,18 @@ const ApplicationApproved = () => {
   };
 
   // show review flow (replace Alert with modal/navigation if you have a review screen)
-  const leaveReview = (jobId: string) => {
-    Alert.alert("Leave Review", "Open review flow for job " + jobId, [
-      { text: "OK" },
-    ]);
+  const leaveReview = (jobId: string, owner: userType, assignee: userType) => {
+    navigation.navigate("Review", {
+      jobId: jobId,
+      owner: {
+        id: owner._id,
+        name: owner.name,
+      },
+      assignee: {
+        id: assignee._id,
+        name: assignee.name,
+      },
+    });
   };
 
   const renderItem = ({ item }: { item: Job }) => {
@@ -138,7 +155,9 @@ const ApplicationApproved = () => {
             {item.status === "completed" ? (
               <TouchableOpacity
                 style={[styles.reviewBtn, { marginLeft: 8 }]}
-                onPress={() => leaveReview(item._id)}
+                onPress={() =>
+                  leaveReview(item._id, item.userId, item.assignedTo!)
+                }
               >
                 <Text style={styles.reviewText}>Leave Review</Text>
               </TouchableOpacity>
@@ -165,7 +184,7 @@ const ApplicationApproved = () => {
         </TouchableOpacity>
       </View>
       <Text style={styles.screenTitle}>Approved Applications</Text>
-      <FlatList<Job>
+      <FlatList
         data={data}
         keyExtractor={(item: Job) => item._id}
         renderItem={renderItem}
