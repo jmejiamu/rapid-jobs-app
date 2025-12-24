@@ -245,6 +245,9 @@ const ProfileScreen = () => {
           {renderMenuItem("list", "Applications Approved", () =>
             navigation.navigate("ApplicationApproved")
           )}
+          {renderMenuItem("list-alt", "Review List", () =>
+            navigation.navigate("ReviewList")
+          )}
 
           <View style={styles.sectionDivider} />
 
