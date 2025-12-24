@@ -9,13 +9,14 @@ import RequestScreen from "../screens/RequestScreen/RequestScreen";
 import DetailJobScreen from "../screens/DetailJobScreen/DetailJobScreen";
 import { PostJobType } from "../types/postjob";
 import ChatList from "../screens/ChatList/ChatList";
-import { RoomDetails, Rooms } from "../types/Rooms";
+import { RoomDetails } from "../types/Rooms";
 import JobPostDetailScreen from "../screens/JobPostDetailScreen/JobPostDetailScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import MyPostedJobsScreen from "../screens/MyPostedJobsScreen/MyPostedJobsScreen";
 import ApplicationApproved from "../screens/ApplicationApproved/ApplicationApproved";
 import ReviewScreen from "../screens/ReviewScreen/ReviewScreen";
+import ReviewListScreen from "../screens/ReviewListScreen/ReviewListScreen";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -37,6 +38,7 @@ export type RootStackParamList = {
         assignee: { id: string; name: string };
       }
     | undefined;
+  ReviewList: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -81,6 +83,7 @@ const RootNavigator: React.FC = () => {
         component={ApplicationApproved}
       />
       <Stack.Screen name="Review" component={ReviewScreen} />
+      <Stack.Screen name="ReviewList" component={ReviewListScreen} />
     </Stack.Navigator>
   );
 };
