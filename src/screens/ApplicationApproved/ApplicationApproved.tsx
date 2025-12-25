@@ -42,6 +42,8 @@ type Job = {
   isAssignee?: boolean;
   canComplete?: boolean;
   [key: string]: any;
+  canReview?: boolean;
+  hasCurrentUserReviewed?: boolean;
 };
 
 const ApplicationApproved = () => {
@@ -154,12 +156,19 @@ const ApplicationApproved = () => {
             {/* Once completed, show Leave Review to both users */}
             {item.status === "completed" ? (
               <TouchableOpacity
-                style={[styles.reviewBtn, { marginLeft: 8 }]}
+                style={[
+                  styles.reviewBtn,
+                  { marginLeft: 8 },
+                  !item.canReview && styles.canReview,
+                ]}
+                disabled={!item.canReview}
                 onPress={() =>
                   leaveReview(item._id, item.userId, item.assignedTo!)
                 }
               >
-                <Text style={styles.reviewText}>Leave Review</Text>
+                <Text style={styles.reviewText}>
+                  {item.hasCurrentUserReviewed ? "Reviewed" : "Leave Review"}
+                </Text>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -274,5 +283,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     marginBottom: 12,
+  },
+  canReview: {
+    backgroundColor: "#da9999ff",
   },
 });

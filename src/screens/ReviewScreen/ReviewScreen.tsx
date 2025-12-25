@@ -119,7 +119,12 @@ const ReviewScreen = () => {
       setComment("");
       setRating(0);
       setFeedback("Thanks! Your review has been submitted.");
-      Alert.alert("Success", "Your review was submitted.");
+      Alert.alert("Success", "Your review was submitted.", [
+        {
+          text: "OK",
+          onPress: () => navigation.goBack(),
+        },
+      ]);
     } catch (error: any) {
       const message =
         error?.message ?? "Something went wrong while submitting the review.";
