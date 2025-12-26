@@ -240,7 +240,7 @@ const ProfileScreen = () => {
           )}
 
           {renderMenuItem("chat-bubble-outline", "Messages", () =>
-            navigation.navigate("ChatList")
+            navigation.navigate("MainApp", { screen: "Chat" })
           )}
           {renderMenuItem("list", "Applications Approved", () =>
             navigation.navigate("ApplicationApproved")

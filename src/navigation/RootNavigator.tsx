@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import OnboardingScreen from "../screens/OnboardingScreen/OnboardingScreen";
-import BottomTabNavigator from "./BottomTabNavigator";
+import BottomTabNavigator, { BottomTabParamList } from "./BottomTabNavigator";
 import { useOnboarding } from "../hooks/useOnboarding";
 import PostJobScreen from "../screens/PostJobScreen/PostJobScreen";
 import { ChatScreen, LoginScreen, RegistrationScreen } from "../screens";
@@ -17,10 +17,11 @@ import MyPostedJobsScreen from "../screens/MyPostedJobsScreen/MyPostedJobsScreen
 import ApplicationApproved from "../screens/ApplicationApproved/ApplicationApproved";
 import ReviewScreen from "../screens/ReviewScreen/ReviewScreen";
 import ReviewListScreen from "../screens/ReviewListScreen/ReviewListScreen";
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type RootStackParamList = {
   Onboarding: undefined;
-  MainApp: undefined;
+  MainApp: NavigatorScreenParams<BottomTabParamList> | undefined;
   PostJob: { job?: PostJobType } | undefined;
   Register: undefined;
   Login: undefined;

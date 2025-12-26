@@ -9,7 +9,6 @@ import {
   View,
 } from "react-native";
 import React, { useCallback, useState } from "react";
-import { API_URL } from "@/config/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/src/redux/store";
 import { SafeAreaView } from "react-native-safe-area-context";
