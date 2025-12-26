@@ -10,10 +10,12 @@ interface UsePaginationOptions<T = any> {
   pageParam?: string;
   dataKey?: string; // Key in response that contains the array (default: 'jobs')
   paginationKey?: string; // Key in response that contains pagination (default: 'pagination')
+  countsKey?: string; // Key in response that contains counts (optional)
 }
 
 interface UsePaginationReturn<T = any> {
   data: T[];
+  counts?: Record<string, number> | null;
   loading: boolean;
   loadingMore: boolean;
   currentPage: number;
@@ -36,9 +38,11 @@ export const usePagination = <T = any,>(
     pageParam = "page",
     dataKey = "jobs",
     paginationKey = "pagination",
+    countsKey = "counts",
   } = options;
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [data, setData] = useState<T[]>([]);
+  const [counts, setCounts] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,6 +66,8 @@ export const usePagination = <T = any,>(
         });
 
         const responseData = await response?.json();
+
+        setCounts(responseData[countsKey] ?? null);
 
         if (page === 1) {
           setData(responseData[dataKey]);
@@ -105,5 +111,6 @@ export const usePagination = <T = any,>(
     resetData,
     addNewItem,
     removeItem,
+    counts,
   };
 };

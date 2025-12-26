@@ -27,11 +27,12 @@ import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
 
 const ProfileScreen = () => {
-  const { data, loading, loadingMore, currentPage, totalPages, fetchData } =
+  const { data, loading, loadingMore, fetchData, counts } =
     usePagination<PostJobType>({
       endpoint: "/jobs/my-jobs",
       dataKey: "myJobs",
       paginationKey: "pagination",
+      countsKey: "counts",
     });
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -93,12 +94,12 @@ const ProfileScreen = () => {
       </View>
       <View style={styles.statDivider} />
       <View style={styles.statItem}>
-        <Text style={styles.statNumber}>{count}</Text>
-        <Text style={styles.statLabel}>Applications</Text>
+        <Text style={styles.statNumber}>{counts?.jobsDone || 0}</Text>
+        <Text style={styles.statLabel}>Jobs Done</Text>
       </View>
       <View style={styles.statDivider} />
       <View style={styles.statItem}>
-        <Text style={styles.statNumber}>0</Text>
+        <Text style={styles.statNumber}>{counts?.reviews || 0}</Text>
         <Text style={styles.statLabel}>Reviews</Text>
       </View>
     </View>
