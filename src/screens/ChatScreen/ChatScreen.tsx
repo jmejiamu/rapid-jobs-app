@@ -47,6 +47,7 @@ const ChatScreen: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.userId); // Replace with actual user ID from auth context or redux
   const route = useRoute<DetailJobRouteProp>();
   const { job } = route.params ?? {};
+  const otherUserId = job?.otherUserId;
 
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
@@ -121,24 +122,26 @@ const ChatScreen: React.FC = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    if (!job?.jobId || !userId) return;
+    if (!job?.jobId || !userId || !otherUserId) return;
 
-    socket.emit("joinRoom", { roomId: job.jobId, userId });
+    const chatRoomId = `${job.jobId}-${[userId, otherUserId].sort().join("-")}`;
+    socket.emit("joinRoom", { roomId: chatRoomId, userId });
 
-    socket.on("newMessage", (newMessage) => {
-      if (typeof newMessage === "object" && newMessage !== null) {
+    // listener specific to current chat
+    const handler = (newMessage: any) => {
+      if (newMessage?.jobId === job.jobId) {
         setNewMessage((prev) => [...prev, newMessage]);
-      } else {
-        console.error("Invalid incoming message:", newMessage);
       }
-    });
+    };
+    socket.on("newMessage", handler);
 
     return () => {
-      socket.off("newMessage");
-      socket.disconnect();
+      socket.off("newMessage", handler);
+      socket.emit("leaveRoom", { roomId: chatRoomId, userId });
     };
-  }, [job?.jobId, userId]);
+  }, [job?.jobId, userId, otherUserId]);
 
   useEffect(() => {
     fetchChatHistory();
