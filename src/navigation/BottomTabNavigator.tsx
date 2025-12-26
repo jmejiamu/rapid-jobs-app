@@ -3,13 +3,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import HomeScreen from "../screens/HomeScreen/HomeScreen";
-import { ProfileScreen, ChatScreen } from "../screens";
+import { ProfileScreen } from "../screens";
 import { colors } from "../theme/colors";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import ChatList from "../screens/ChatList/ChatList";
 
-const Tab = createBottomTabNavigator();
+export type BottomTabParamList = {
+  Home: undefined;
+  Chat: undefined;
+  Profile: undefined;
+};
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const count = useSelector((state: RootState) => state.count.value);
