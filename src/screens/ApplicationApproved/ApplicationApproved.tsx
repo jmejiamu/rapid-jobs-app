@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { API_URL } from "@/config/api";
@@ -16,6 +15,9 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
