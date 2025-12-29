@@ -1,19 +1,21 @@
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "@/src/navigation/RootNavigator";
-import { MainButton } from "@/src/components";
+import { useDispatch, useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import { PhoneInput } from "react-native-phone-entry";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
+import { RootStackParamList } from "@/src/navigation/RootNavigator";
+import { fetchExpoPushToken } from "@/src/redux/notificationSlice";
+import { AppDispatch, RootState } from "@/src/redux/store";
+import { setUserData } from "@/src/redux/authSlice";
+import { MainButton } from "@/src/components";
 import { colors } from "@/src/theme/colors";
 import { API_URL } from "@/config/api";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/src/redux/store";
-import { setUserData } from "@/src/redux/authSlice";
 
 const schema = z.object({
   phone: z
@@ -27,6 +29,9 @@ interface AuthFormInputs extends z.infer<typeof schema> {}
 
 const LoginScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
+  let { expoPushToken } = useSelector(
+    (state: RootState) => state.pushNotifications
+  );
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const {
@@ -47,7 +52,10 @@ const LoginScreen = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ phone: dataInput.phone }),
+        body: JSON.stringify({
+          phone: dataInput.phone,
+          deviceToken: expoPushToken,
+        }),
       });
 
       if (!response.ok) {
@@ -64,6 +72,12 @@ const LoginScreen = () => {
       console.error("Error verifying OTP:", error);
     }
   };
+
+  useEffect(() => {
+    if (!expoPushToken) {
+      dispatch(fetchExpoPushToken());
+    }
+  }, [expoPushToken, dispatch]);
 
   return (
     <SafeAreaView>

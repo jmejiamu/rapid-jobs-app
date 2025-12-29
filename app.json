@@ -32,7 +32,14 @@
     },
     "plugins": [
       "expo-localization",
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification.png",
+          "color": "#ffffff",
+          "defaultChannel": "default"
+        }
+      ],
       [
         "expo-camera",
         {
@@ -42,6 +49,12 @@
         }
       ],
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "56aa6881-1d29-471d-bf9b-3a4549c84598"
+      }
+    },
+    "owner": "zero-one"
   }
 }

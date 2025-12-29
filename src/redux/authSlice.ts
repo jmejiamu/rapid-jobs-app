@@ -6,6 +6,7 @@ interface AuthState {
   phone: string | null;
   name: string | null;
   userId?: string | null;
+  deviceToken?: string | null;
 }
 
 const initialState: AuthState = {
@@ -14,6 +15,7 @@ const initialState: AuthState = {
   phone: null,
   name: null,
   userId: null,
+  deviceToken: null,
 };
 
 const authSlice = createSlice({
@@ -26,6 +28,7 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.userId = action.payload.userId;
+      state.deviceToken = action.payload.deviceToken;
     },
     setToken(state, action: PayloadAction<string>) {
       state.accessToken = action.payload;
