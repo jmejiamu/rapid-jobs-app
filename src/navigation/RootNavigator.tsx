@@ -18,6 +18,7 @@ import ApplicationApproved from "../screens/ApplicationApproved/ApplicationAppro
 import ReviewScreen from "../screens/ReviewScreen/ReviewScreen";
 import ReviewListScreen from "../screens/ReviewListScreen/ReviewListScreen";
 import { NavigatorScreenParams } from "@react-navigation/native";
+import WelcomeScreen from "../screens/WelcomeScreen/WelcomeScreen";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -40,6 +41,7 @@ export type RootStackParamList = {
       }
     | undefined;
   ReviewList: undefined;
+  WelcomeScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -60,14 +62,17 @@ const RootNavigator: React.FC = () => {
       }}
     >
       {!accessToken && !isOnboardingComplete ? (
-        <Stack.Screen name="Onboarding">
-          {(props) => (
-            <OnboardingScreen
-              {...props}
-              onComplete={handleOnboardingComplete}
-            />
-          )}
-        </Stack.Screen>
+        <>
+          <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+          <Stack.Screen name="Onboarding">
+            {(props) => (
+              <OnboardingScreen
+                {...props}
+                onComplete={handleOnboardingComplete}
+              />
+            )}
+          </Stack.Screen>
+        </>
       ) : null}
       <Stack.Screen name="MainApp" component={BottomTabNavigator} />
       <Stack.Screen name="PostJob" component={PostJobScreen} />
