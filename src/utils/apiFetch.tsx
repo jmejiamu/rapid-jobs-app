@@ -48,6 +48,7 @@ export const apiFetch = async (
 // Helper to refresh token
 const refreshToken = async (): Promise<boolean> => {
   const refreshToken = store.getState().auth.refreshToken;
+  const deviceToken = store.getState().auth.deviceToken;
   try {
     const response = await fetch(`${API_URL}/auth/refresh`, {
       method: "POST",
@@ -55,6 +56,7 @@ const refreshToken = async (): Promise<boolean> => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${refreshToken}`, // Or send refresh token if available
       },
+      body: JSON.stringify({ deviceToken }),
     });
     if (response.ok) {
       const data = await response.json();

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "@/src/redux/authSlice";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "react-native-phone-entry";
@@ -12,12 +13,12 @@ import { z } from "zod";
 
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import CustomInput from "@/src/components/CustomInput/CustomInput";
+import { fetchExpoPushToken } from "@/src/redux/notificationSlice";
+import { AppDispatch, RootState } from "@/src/redux/store";
 import { fontSize } from "@/src/theme/fontStyle";
 import { MainButton } from "@/src/components";
 import { colors } from "@/src/theme/colors";
 import { API_URL } from "@/config/api";
-import { AppDispatch } from "@/src/redux/store";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const schema = z.object({
   phone: z
@@ -42,6 +43,9 @@ const RegistrationScreen = () => {
       name: "",
     },
   });
+  const { expoPushToken } = useSelector(
+    (state: RootState) => state.pushNotifications
+  );
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
@@ -95,6 +99,7 @@ const RegistrationScreen = () => {
           code: otp,
           name: dataInput.name,
           phone: dataInput.phone,
+          deviceToken: expoPushToken,
         }),
       });
 
@@ -112,6 +117,12 @@ const RegistrationScreen = () => {
       console.error("Error verifying OTP:", error);
     }
   };
+
+  useEffect(() => {
+    if (!expoPushToken) {
+      dispatch(fetchExpoPushToken());
+    }
+  }, [expoPushToken, dispatch]);
 
   return (
     <SafeAreaView>
