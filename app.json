@@ -32,6 +32,7 @@
     },
     "plugins": [
       "expo-localization",
+      "expo-notifications",
       [
         "expo-camera",
         {

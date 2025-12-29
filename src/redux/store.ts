@@ -12,6 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import authReducer, { logout } from "./authSlice";
 import countSlice from "./countSlice";
+import notificationsSlice from "./notificationSlice";
 
 const persistConfig = {
   key: "root",
@@ -21,6 +22,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   count: countSlice,
+  pushNotifications: notificationsSlice,
 });
 
 const appReducer = (
