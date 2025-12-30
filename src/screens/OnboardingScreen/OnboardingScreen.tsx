@@ -1,5 +1,11 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, FlatList, StatusBar } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  StatusBar,
+  Dimensions,
+} from "react-native";
 import LottieView from "lottie-react-native";
 import { OnboardingCard, ProgressIndicator } from "../../components/onboarding";
 import { translate } from "../../translation/i18n";
@@ -7,6 +13,7 @@ import { OnboardingSlide } from "../../types/onboarding";
 import { MainButton } from "@/src/components";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const { width, height } = Dimensions.get("window");
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
@@ -22,6 +29,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       description: translate("onboarding.slide1.description"),
       buttonText: translate("onboarding.buttons.getStarted"),
       image: require("../../../assets/Welcome Animation.json"),
+      color: "#f3c3ccff",
     },
     {
       id: 2,
@@ -29,6 +37,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       description: translate("onboarding.slide2.description"),
       buttonText: translate("onboarding.buttons.next"),
       image: require("../../../assets/Location Pin Animation.json"),
+      color: "#b6d9f7ff",
     },
     {
       id: 3,
@@ -36,6 +45,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       description: translate("onboarding.slide3.description"),
       buttonText: translate("onboarding.buttons.next"),
       image: require("../../../assets/Job Search Animation.json"),
+      color: "#fed7a0ff",
     },
     {
       id: 4,
@@ -43,6 +53,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       description: translate("onboarding.slide4.description"),
       buttonText: translate("onboarding.buttons.letsGetStarted"),
       image: require("../../../assets/Success Animation Lottie.json"),
+      color: "#6cdd84ff",
     },
   ];
 
@@ -74,7 +85,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
   const renderSlide = ({ item }: { item: OnboardingSlide }) => {
     return (
-      <OnboardingCard title={item.title} description={item.description}>
+      <OnboardingCard
+        title={item.title}
+        description={item.description}
+        backgroundColor={item.color}
+      >
         <LottieView
           source={item.image}
           autoPlay
@@ -86,17 +101,16 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["bottom"]} style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.header}>
-        <MainButton
-          title={translate("onboarding.buttons.skip")}
-          variant="text"
-          onPress={handleSkip}
-          style={styles.skipButton}
-        />
-      </View>
+      <MainButton
+        title={translate("onboarding.buttons.skip")}
+        variant="text"
+        onPress={handleSkip}
+        style={styles.skipButton}
+        textStyle={{ color: "#191e5eff", fontSize: 18 }}
+      />
 
       <FlatList
         ref={flatListRef}
@@ -121,7 +135,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
           <MainButton
             title={slides[currentIndex].buttonText}
             onPress={handleNext}
-            style={styles.nextButton}
+            size="lg"
+            style={[
+              styles.nextButton,
+              { backgroundColor: slides[currentIndex].color },
+            ]}
+            textStyle={{ color: "#191e5eff" }}
           />
         </View>
       </View>
@@ -144,6 +163,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     minHeight: "auto",
+    position: "absolute",
+    zIndex: 1,
+    top: 55,
+    right: 20,
   },
   flatList: {
     flex: 1,
@@ -157,10 +180,11 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     width: "100%",
+    borderRadius: 25,
   },
   lottieAnimation: {
-    width: 200,
-    height: 200,
+    width: 400,
+    height: 400,
   },
 });
 

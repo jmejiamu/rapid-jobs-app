@@ -70,4 +70,10 @@ export const styles = StyleSheet.create({
     height: 300,
     borderRadius: 12,
   },
+  rightElement: {
+    flex: 1,
+  },
+  leftElement: {
+    flex: 1,
+  },
 });

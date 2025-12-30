@@ -9,18 +9,27 @@ interface OnboardingCardProps {
   title: string;
   description: string;
   children?: React.ReactNode;
+  backgroundColor?: string;
 }
 
 export const OnboardingCard: React.FC<OnboardingCardProps> = ({
   title,
   description,
   children,
+  backgroundColor,
 }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.contentContainer}>
+      <View
+        style={[
+          styles.top,
+          { backgroundColor: backgroundColor || colors.background },
+        ]}
+      >
         {children && <View style={styles.imageContainer}>{children}</View>}
+      </View>
 
+      <View style={styles.contentContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
@@ -36,39 +45,35 @@ const styles = StyleSheet.create({
     height: height * 0.7,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 24,
   },
   contentContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    maxWidth: 320,
+    marginTop: 20,
   },
-  imageContainer: {
-    width: 200,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 40,
-    backgroundColor: colors.background,
-    borderRadius: 20,
-  },
+  imageContainer: {},
   textContainer: {
-    alignItems: "center",
+    marginTop: 20,
   },
   title: {
     fontSize: fontSize.xl,
     fontWeight: "bold",
     color: colors.textPrimary,
-    textAlign: "center",
     marginBottom: 16,
     lineHeight: 34,
+    paddingHorizontal: 25,
   },
   description: {
     fontSize: fontSize.sm,
     color: colors.textSecondary,
-    textAlign: "center",
     lineHeight: 22,
-    paddingHorizontal: 16,
+    paddingHorizontal: 25,
+  },
+
+  top: {
+    width: "100%",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
 });

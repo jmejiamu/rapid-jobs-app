@@ -36,6 +36,7 @@ const WelcomeScreen = () => {
           marginHorizontal: 20,
           marginTop: 20,
           backgroundColor: "blue",
+          borderRadius: 25,
         }}
       />
       <LinearGradient
