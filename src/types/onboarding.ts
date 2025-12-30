@@ -4,6 +4,7 @@ export interface OnboardingSlide {
   description: string;
   image?: any; // Para soportar require() de archivos Lottie
   buttonText: string;
+  color?: string;
 }
 
 export interface OnboardingScreenProps {

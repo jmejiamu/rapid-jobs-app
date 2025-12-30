@@ -4,19 +4,22 @@ const en = {
   onboarding: {
     slide1: {
       title: "Welcome to rapid jobs",
-      description: "Find the perfect job opportunity that matches your skills and location preferences.",
+      description:
+        "Find the perfect job opportunity that matches your skills and location preferences.",
     },
     slide2: {
       title: "Find quick jobs near you",
-      description: "No interview. No waiting. Just work, get paid in cash.",
+      description:
+        "No interview. No waiting. Just skills. Just work, get paid in cash.",
     },
     slide3: {
       title: "How it works",
-      description: "Browse jobs near you. Accept one tap. Get paid.",
+      description: `Browse jobs near you. Accept one tap. Chat for details. Get paid.`,
     },
     slide4: {
       title: "Start working Today",
-      description: "Ready to earn money? Let's get started with your first job.",
+      description:
+        "Ready to earn money? Let's get started with your first job.",
     },
     buttons: {
       getStarted: "Get started",

@@ -21,14 +21,14 @@ import { fontSize } from "@/src/theme/fontStyle";
 import { API_SOCKET_URL, API_URL } from "@/config/api";
 import { usePagination } from "@/src/hooks";
 import { PostJobType } from "@/src/types/postjob";
-import { AntDesign } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
-import { AppDispatch, persistor, RootState } from "@/src/redux/store";
+import { AppDispatch, RootState } from "@/src/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setCount } from "@/src/redux/countSlice";
 import { apiFetch } from "@/src/utils/apiFetch";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Image } from "expo-image";
 
 const HomeScreen: React.FC = () => {
   const {
@@ -166,6 +166,16 @@ const HomeScreen: React.FC = () => {
       {/* Add Logout Button in Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Rapid Jobs</Text>
+        <Image
+          source={require("../../../assets/logo-img.png")}
+          style={{
+            width: 45,
+            height: 45,
+            borderRadius: 45 / 2,
+            borderWidth: 1,
+            borderColor: "#579af3ff",
+          }}
+        />
       </View>
       <View style={styles.searchContainer}>
         {/* Search Input */}
@@ -217,31 +227,31 @@ const HomeScreen: React.FC = () => {
           data={jobs}
           renderItem={({ item }) => {
             return (
-              <>
-                <JobCard job={item} />
-                <View style={styles.jobActions}>
-                  <View style={styles.seeDetailsButton}>
-                    <MainButton
-                      title="See details"
-                      onPress={() =>
-                        navigation.navigate("DetailJob", { job: item })
+              <JobCard
+                job={item}
+                rightElement={
+                  <MainButton
+                    title="See details"
+                    size="sm"
+                    onPress={() =>
+                      navigation.navigate("DetailJob", { job: item })
+                    }
+                    style={styles.primaryButton}
+                  />
+                }
+                leftElement={
+                  <MainButton
+                    title="Do this job"
+                    size="sm"
+                    onPress={() => {
+                      if (item?._id) {
+                        requestJobs(item._id);
                       }
-                      style={styles.primaryButton}
-                    />
-                  </View>
-                  <View style={styles.doJobButton}>
-                    <MainButton
-                      title="Do this job"
-                      onPress={() => {
-                        if (item?._id) {
-                          requestJobs(item._id);
-                        }
-                      }}
-                      style={styles.secondaryButton}
-                    />
-                  </View>
-                </View>
-              </>
+                    }}
+                    style={styles.secondaryButton}
+                  />
+                }
+              />
             );
           }}
           keyExtractor={(item, index) => item._id + index.toString()}
@@ -321,7 +331,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     backgroundColor: colors.surface,
-    borderRadius: 8,
+    borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: fontSize.sm,
@@ -377,12 +387,13 @@ const styles = StyleSheet.create({
   seeDetailsButton: {},
   primaryButton: {
     backgroundColor: colors.primary,
+    marginRight: 10,
   },
   doJobButton: {
     flex: 1,
   },
   secondaryButton: {
-    backgroundColor: colors.textSecondary,
+    backgroundColor: "#2c2c2cee",
   },
   footerLoader: {
     padding: 16,

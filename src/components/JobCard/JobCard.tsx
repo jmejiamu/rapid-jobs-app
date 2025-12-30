@@ -5,7 +5,15 @@ import { Image } from "expo-image";
 import { PostJobType } from "@/src/types/postjob";
 import { styles } from "./styles/styles";
 
-export const JobCard = ({ job }: { job: PostJobType }) => {
+export const JobCard = ({
+  job,
+  leftElement,
+  rightElement,
+}: {
+  job: PostJobType;
+  leftElement?: React.ReactNode;
+  rightElement?: React.ReactNode;
+}) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
@@ -55,6 +63,12 @@ export const JobCard = ({ job }: { job: PostJobType }) => {
             ))}
         </View>
       )}
+      <View style={{ flexDirection: "row" }}>
+        {rightElement && (
+          <View style={styles.rightElement}>{rightElement}</View>
+        )}
+        {leftElement && <View style={styles.leftElement}>{leftElement}</View>}
+      </View>
       {/* Modal for full-size image */}
       <Modal
         visible={modalVisible}

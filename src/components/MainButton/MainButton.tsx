@@ -5,6 +5,7 @@ import {
   ViewStyle,
   TextStyle,
   ActivityIndicator,
+  StyleProp,
 } from "react-native";
 
 import { styles } from "./styles/styles";
@@ -14,7 +15,7 @@ interface OnboardingButtonProps {
   onPress: () => void;
   variant?: "primary" | "secondary" | "text";
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   textStyle?: TextStyle;
   loading?: boolean;
   size?: "sm" | "md" | "lg";
