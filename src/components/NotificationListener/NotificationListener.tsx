@@ -30,7 +30,6 @@ export const NotificationListener = (props: NotificationListenerProps) => {
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {
-        console.log("🔔 Notification Received: ", notification);
         setNotification(notification);
       }
     );
