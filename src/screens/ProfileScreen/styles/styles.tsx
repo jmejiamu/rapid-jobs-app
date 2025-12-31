@@ -1,6 +1,8 @@
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+const { height } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   // Main Container
@@ -30,7 +32,7 @@ export const styles = StyleSheet.create({
   // Notification Icon
   notificationIcon: {
     position: "absolute",
-    top: 16,
+    top: height * 0.07,
     right: 20,
     padding: 8,
     zIndex: 10,
@@ -57,16 +59,15 @@ export const styles = StyleSheet.create({
 
   // Profile Header
   profileHeader: {
-    flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
-    marginTop: 8,
+    marginTop: height * 0.07,
   },
 
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: 80 / 2,
     backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
@@ -78,6 +79,8 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 6,
+    borderWidth: 3,
+    borderColor: "#FFFFFF",
   },
 
   avatarText: {
@@ -89,7 +92,7 @@ export const styles = StyleSheet.create({
 
   profileInfo: {
     flex: 1,
-    marginLeft: 16,
+    // marginLeft: 16,
     justifyContent: "center",
   },
 
@@ -98,6 +101,8 @@ export const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.textPrimary,
     marginBottom: 6,
+    marginTop: 8,
+    textAlign: "center",
   },
 
   userDetails: {
@@ -134,6 +139,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: "#E0E0E0",
+    marginTop: 120,
   },
 
   statItem: {
@@ -167,7 +173,7 @@ export const styles = StyleSheet.create({
   },
 
   postJobButton: {
-    borderRadius: 12,
+    borderRadius: 25,
     shadowColor: colors.primary,
     shadowOffset: {
       width: 0,
