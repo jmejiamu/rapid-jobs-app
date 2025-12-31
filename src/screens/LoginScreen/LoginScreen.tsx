@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import { PhoneInput } from "react-native-phone-entry";
@@ -15,6 +22,7 @@ import { AppDispatch, RootState } from "@/src/redux/store";
 import { setUserData } from "@/src/redux/authSlice";
 import { MainButton } from "@/src/components";
 import { colors } from "@/src/theme/colors";
+import { fontSize } from "@/src/theme/fontStyle";
 import { API_URL } from "@/config/api";
 
 const schema = z.object({
@@ -80,82 +88,154 @@ const LoginScreen = () => {
   }, [expoPushToken, dispatch]);
 
   return (
-    <SafeAreaView>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <MaterialIcons name="keyboard-arrow-left" size={35} color="black" />
-      </TouchableOpacity>
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: "bold",
-          textAlign: "center",
-          marginVertical: 20,
-        }}
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardView}
       >
-        Welcome back to Rapid Jobs!
-      </Text>
+        <View style={styles.content}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+          </TouchableOpacity>
 
-      <View style={{ marginHorizontal: 16 }}>
-        <Controller
-          control={control}
-          name="phone"
-          render={({ field: { onChange, value } }) => {
-            return (
-              <>
-                <View
-                  style={{ flex: 1, flexDirection: "row", marginBottom: 50 }}
-                >
-                  <PhoneInput
-                    defaultValues={{
-                      countryCode: "US",
-                      callingCode: "+1",
-                      phoneNumber: "+1",
-                    }}
-                    value={value}
-                    onChangeText={(text) => onChange(text.toString())}
-                    onChangeCountry={(country) =>
-                      console.log("Country:", country)
-                    }
-                    autoFocus={true}
-                    disabled={false}
-                    theme={{
-                      containerStyle: {
-                        backgroundColor: colors.surface,
-                        borderWidth: 1,
-                        borderColor: colors.textSecondary,
-                        borderRadius: 8,
-                        height: 50,
-                        flex: 1,
-                      },
-                      textInputStyle: {
-                        backgroundColor: colors.surface,
-                        borderColor: colors.textSecondary,
-                      },
-                    }}
-                    hideDropdownIcon={false}
-                    isCallingCodeEditable={false}
-                  />
-                  <View style={{ margin: 8 }} />
-                  <MainButton
-                    title="Verify"
-                    style={{ height: 50 }}
-                    onPress={handleSubmit(sendOtp)}
-                  />
-                </View>
+          <View style={styles.heroSection}>
+            <View style={styles.iconCircle}>
+              <MaterialCommunityIcons
+                name="briefcase-check"
+                size={40}
+                color={colors.primary}
+              />
+            </View>
+            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.subtitle}>
+              Enter your phone number to continue
+            </Text>
+          </View>
+
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field: { onChange, value } }) => (
+              <View style={styles.formSection}>
+                <PhoneInput
+                  defaultValues={{
+                    countryCode: "US",
+                    callingCode: "+1",
+                    phoneNumber: "+1",
+                  }}
+                  value={value}
+                  onChangeText={(text) => onChange(text.toString())}
+                  onChangeCountry={(country) =>
+                    console.log("Country:", country)
+                  }
+                  autoFocus={true}
+                  disabled={false}
+                  theme={{
+                    containerStyle: styles.phoneInput,
+                    textInputStyle: styles.phoneInputText,
+                  }}
+                  hideDropdownIcon={false}
+                  isCallingCodeEditable={false}
+                />
+
                 {errors.phone && (
-                  <Text style={{ color: colors.error, marginVertical: 5 }}>
-                    {errors.phone.message}
-                  </Text>
+                  <Text style={styles.errorText}>{errors.phone.message}</Text>
                 )}
-              </>
-            );
-          }}
-        />
-      </View>
+
+                <MainButton
+                  title="Continue"
+                  onPress={handleSubmit(sendOtp)}
+                  style={styles.submitButton}
+                />
+              </View>
+            )}
+          />
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text style={styles.footerLink}>Sign up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  heroSection: {
+    alignItems: "center",
+    marginTop: 60,
+    marginBottom: 40,
+  },
+  iconCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.primary + "15",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: fontSize.md,
+    color: colors.textSecondary,
+  },
+  formSection: {
+    gap: 16,
+  },
+  phoneInput: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 12,
+    height: 54,
+  },
+  phoneInputText: {
+    backgroundColor: "transparent",
+    fontSize: fontSize.md,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: fontSize.xs,
+    marginTop: -8,
+  },
+  submitButton: {
+    borderRadius: 12,
+    height: 54,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 32,
+  },
+  footerText: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+  },
+  footerLink: {
+    fontSize: fontSize.sm,
+    color: colors.primary,
+    fontWeight: "600",
+  },
+});

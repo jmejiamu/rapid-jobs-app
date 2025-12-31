@@ -19,14 +19,17 @@ import {
   Text,
   View,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
+import { EmptyState } from "@/src/components";
+import { colors } from "@/src/theme/colors";
+import { fontSize } from "@/src/theme/fontStyle";
 
 type userType = {
   _id: string;
   name: string;
 };
-// Add Job type that matches backend response
+
 type Job = {
   _id: string;
   title: string;
@@ -56,7 +59,7 @@ const ApplicationApproved = () => {
   const { data, loading, loadingMore, currentPage, totalPages, fetchData } =
     usePagination<Job>({
       endpoint: "/jobs/approved-jobs",
-      dataKey: "myApprovedJobs", // key has to match backend response
+      dataKey: "myApprovedJobs",
       paginationKey: "pagination",
     });
 
@@ -102,7 +105,6 @@ const ApplicationApproved = () => {
     );
   };
 
-  // show review flow (replace Alert with modal/navigation if you have a review screen)
   const leaveReview = (jobId: string, owner: userType, assignee: userType) => {
     navigation.navigate("Review", {
       jobId: jobId,
@@ -117,15 +119,56 @@ const ApplicationApproved = () => {
     });
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed":
+        return colors.success;
+      case "approved":
+        return colors.primary;
+      default:
+        return colors.warning;
+    }
+  };
+
   const renderItem = ({ item }: { item: Job }) => {
     return (
       <View style={styles.card}>
-        <View style={styles.row}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.pay}>${item.pay}</Text>
+        <View style={styles.cardHeader}>
+          <Text style={styles.title} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <View
+            style={[
+              styles.statusBadge,
+              { backgroundColor: getStatusColor(item.status) + "20" },
+            ]}
+          >
+            <View
+              style={[
+                styles.statusDot,
+                { backgroundColor: getStatusColor(item.status) },
+              ]}
+            />
+            <Text
+              style={[styles.statusText, { color: getStatusColor(item.status) }]}
+            >
+              {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            </Text>
+          </View>
         </View>
 
-        <Text style={styles.sub}>{item.address}</Text>
+        <View style={styles.payRow}>
+          <MaterialIcons name="attach-money" size={18} color={colors.success} />
+          <Text style={styles.pay}>{item.pay}</Text>
+        </View>
+
+        {item.address ? (
+          <View style={styles.addressRow}>
+            <MaterialIcons name="location-on" size={16} color={colors.textSecondary} />
+            <Text style={styles.address}>{item.address}</Text>
+          </View>
+        ) : null}
+
         <Text style={styles.desc} numberOfLines={3}>
           {item.description}
         </Text>
@@ -134,13 +177,32 @@ const ApplicationApproved = () => {
           <Image source={{ uri: item.images[0] }} style={styles.image} />
         ) : null}
 
-        <View style={styles.row}>
+        {item.assignedTo && (
+          <View style={styles.assignedInfo}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>
+                {item.assignedTo.name.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.assignedDetails}>
+              <Text style={styles.assignedLabel}>Assigned to</Text>
+              <Text style={styles.assignedName}>{item.assignedTo.name}</Text>
+            </View>
+          </View>
+        )}
+
+        <View style={styles.footer}>
           <Text style={styles.posted}>
-            {item.postedAt ? new Date(item.postedAt).toLocaleString() : ""}
+            {item.postedAt
+              ? new Date(item.postedAt).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : ""}
           </Text>
 
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {/* Owner can mark complete (only when job is not completed) */}
+          <View style={styles.actionButtons}>
             {item.isOwner && item.canComplete && item.status !== "completed" ? (
               <TouchableOpacity
                 style={styles.completeBtn}
@@ -148,28 +210,34 @@ const ApplicationApproved = () => {
                 disabled={markingId === item._id}
               >
                 {markingId === item._id ? (
-                  <ActivityIndicator color="#fff" />
+                  <ActivityIndicator color="#fff" size="small" />
                 ) : (
-                  <Text style={styles.completeText}>Mark Complete</Text>
+                  <>
+                    <MaterialIcons name="check-circle" size={16} color="#fff" />
+                    <Text style={styles.completeText}>Complete</Text>
+                  </>
                 )}
               </TouchableOpacity>
             ) : null}
 
-            {/* Once completed, show Leave Review to both users */}
             {item.status === "completed" ? (
               <TouchableOpacity
                 style={[
                   styles.reviewBtn,
-                  { marginLeft: 8 },
-                  !item.canReview && styles.canReview,
+                  !item.canReview && styles.reviewBtnDisabled,
                 ]}
                 disabled={!item.canReview}
                 onPress={() =>
                   leaveReview(item._id, item.userId, item.assignedTo!)
                 }
               >
+                <MaterialIcons
+                  name={item.hasCurrentUserReviewed ? "star" : "star-outline"}
+                  size={16}
+                  color="#fff"
+                />
                 <Text style={styles.reviewText}>
-                  {item.hasCurrentUserReviewed ? "Reviewed" : "Leave Review"}
+                  {item.hasCurrentUserReviewed ? "Reviewed" : "Review"}
                 </Text>
               </TouchableOpacity>
             ) : null}
@@ -179,39 +247,71 @@ const ApplicationApproved = () => {
     );
   };
 
+  const renderListHeader = () => (
+    <>
+      {data?.length > 0 && (
+        <Text style={styles.listHeaderText}>Approved Applications</Text>
+      )}
+    </>
+  );
+
+  const renderEmptyState = () => (
+    <EmptyState
+      icon="clipboard-check-outline"
+      title="No Approved Applications"
+      description="Jobs you've been approved for or jobs where you've approved someone will appear here."
+    />
+  );
+
   if (loading) {
     return (
-      <SafeAreaView style={styles.center}>
-        <ActivityIndicator />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.backButtonContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.textPrimary} />
+        </View>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ paddingHorizontal: 16 }}>
+      <View style={styles.backButtonContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialIcons name="arrow-back-ios" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.screenTitle}>Approved Applications</Text>
-      <FlatList
-        data={data}
-        keyExtractor={(item: Job) => item._id}
-        renderItem={renderItem}
-        onEndReached={() => {
-          if (!loadingMore && currentPage < totalPages) {
-            fetchData(currentPage + 1);
+      <View style={styles.contentWrapper}>
+        <FlatList
+          data={data}
+          keyExtractor={(item: Job) => item._id}
+          renderItem={renderItem}
+          contentContainerStyle={
+            data?.length === 0 ? styles.emptyListContent : undefined
           }
-        }}
-        onRefresh={() => fetchData(1)}
-        refreshing={loading}
-        ListEmptyComponent={
-          <View style={styles.center}>
-            <Text>No approved applications</Text>
-          </View>
-        }
-      />
+          ListHeaderComponent={renderListHeader}
+          ListEmptyComponent={renderEmptyState}
+          onEndReached={() => {
+            if (!loadingMore && currentPage < totalPages) {
+              fetchData(currentPage + 1);
+            }
+          }}
+          onRefresh={() => fetchData(1)}
+          refreshing={loading}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            loadingMore ? (
+              <View style={styles.footerLoader}>
+                <ActivityIndicator size="small" color={colors.textPrimary} />
+              </View>
+            ) : null
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -219,74 +319,189 @@ const ApplicationApproved = () => {
 export default ApplicationApproved;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 12 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  card: {
-    borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: "#fff",
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  backButtonContainer: {
+    paddingHorizontal: 16,
+  },
+  contentWrapper: {
+    marginHorizontal: 16,
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
+  listHeaderText: {
+    fontSize: fontSize.xl,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginBottom: 16,
+    marginTop: 8,
+  },
+  emptyListContent: {
+    flexGrow: 1,
+  },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
   title: {
-    fontSize: 16,
+    fontSize: fontSize.md,
+    fontWeight: "600",
+    color: colors.textPrimary,
+    flex: 1,
+    marginRight: 12,
+  },
+  statusBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 6,
+  },
+  statusText: {
+    fontSize: fontSize.xxs,
     fontWeight: "600",
   },
-  pay: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#2b8a3e",
+  payRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
   },
-  sub: {
-    color: "#666",
-    marginTop: 4,
+  pay: {
+    fontSize: fontSize.md,
+    fontWeight: "700",
+    color: colors.success,
+    marginLeft: 2,
+  },
+  addressRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  address: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    marginLeft: 4,
+    flex: 1,
   },
   desc: {
-    marginTop: 8,
-    color: "#333",
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    lineHeight: 20,
+    marginBottom: 12,
   },
   image: {
     width: "100%",
     height: 160,
-    marginTop: 8,
-    borderRadius: 6,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  assignedInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.background,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatarText: {
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    color: colors.surface,
+  },
+  assignedDetails: {
+    marginLeft: 12,
+  },
+  assignedLabel: {
+    fontSize: fontSize.xxs,
+    color: colors.textSecondary,
+  },
+  assignedName: {
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    color: colors.textPrimary,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.background,
   },
   posted: {
-    color: "#999",
-    fontSize: 12,
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
+  },
+  actionButtons: {
+    flexDirection: "row",
+    gap: 8,
   },
   completeBtn: {
-    backgroundColor: "#2563eb",
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 6,
+    backgroundColor: colors.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   completeText: {
     color: "#fff",
     fontWeight: "600",
+    fontSize: fontSize.xs,
   },
   reviewBtn: {
-    backgroundColor: "#ef4444",
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 6,
+    backgroundColor: colors.accent,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  reviewBtnDisabled: {
+    backgroundColor: colors.textSecondary,
+    opacity: 0.6,
   },
   reviewText: {
     color: "#fff",
     fontWeight: "600",
+    fontSize: fontSize.xs,
   },
-  screenTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 12,
-  },
-  canReview: {
-    backgroundColor: "#da9999ff",
+  footerLoader: {
+    paddingVertical: 16,
   },
 });
