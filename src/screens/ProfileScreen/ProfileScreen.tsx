@@ -1,14 +1,5 @@
-import React, { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-  Alert,
-  ScrollView,
-} from "react-native";
+import React, { useCallback } from "react";
+import { Text, TouchableOpacity, View, Alert, ScrollView } from "react-native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
@@ -19,12 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/src/redux/authSlice";
 
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
-import { JobCard, MainButton, EmptyState } from "@/src/components";
+import { MainButton } from "@/src/components";
 import { PostJobType } from "@/src/types/postjob";
-import { fontSize } from "@/src/theme/fontStyle";
 import { usePagination } from "@/src/hooks";
 import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
+import { LinearGradient } from "expo-linear-gradient";
+import { ImageBackground } from "expo-image";
 
 const ProfileScreen = () => {
   const { data, loading, loadingMore, fetchData, counts } =
@@ -171,7 +163,7 @@ const ProfileScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={["bottom"]} style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <View style={styles.headerSection}>
@@ -192,13 +184,20 @@ const ProfileScreen = () => {
           </TouchableOpacity>
 
           {/* Profile Info */}
-          <View style={styles.profileHeader}>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>{getUserInitials()}</Text>
-            </View>
-            <View style={styles.profileInfo}>
+          <ImageBackground
+            style={{
+              width: "100%",
+              marginTop: 30,
+              height: 200,
+            }}
+            source={require("../../../assets/logo-img.png")}
+          >
+            <View style={styles.profileHeader}>
+              <View style={[styles.avatar, { marginTop: 100 }]}>
+                <Text style={styles.avatarText}>{getUserInitials()}</Text>
+              </View>
               <Text style={styles.userName}>{username}</Text>
-              <View style={styles.verifiedContainer}>
+              <View style={[styles.verifiedContainer]}>
                 <Text style={styles.userDetails}>{phone}</Text>
                 <MaterialIcons
                   name="verified"
@@ -209,7 +208,19 @@ const ProfileScreen = () => {
                 <Text style={styles.verified}>Verified</Text>
               </View>
             </View>
-          </View>
+          </ImageBackground>
+          <LinearGradient
+            colors={["rgba(111, 167, 251, 0.58)", "transparent"]}
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 0,
+              // bottom: 0,
+              height: 300,
+            }}
+            pointerEvents="none"
+          />
 
           {/* Stats Cards */}
           {renderStatsCard()}
