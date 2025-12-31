@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { MaterialIcons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { Dropdown } from "react-native-element-dropdown";
 import { useNavigation } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +35,6 @@ const PostJobScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [images, setImages] = useState<ImageObject[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  //TODO: Refactor this later
   const [loadingImages, setLoadingImages] = useState<boolean[]>([
     false,
     false,
@@ -44,6 +43,7 @@ const PostJobScreen = () => {
   ]);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const {
     control,
@@ -80,8 +80,6 @@ const PostJobScreen = () => {
         body: JSON.stringify(body),
       });
       if (!response.ok) throw new Error("Failed to post job");
-      // Optionally get the posted job data
-      // const job = await response.json();
       navigation.goBack();
     } catch (error) {
       Alert.alert("Error", "Failed to post job");
@@ -114,9 +112,11 @@ const PostJobScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentWrapper}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons name="keyboard-arrow-left" size={35} color="black" />
-        </TouchableOpacity>
+        <View style={styles.backButtonContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -129,22 +129,27 @@ const PostJobScreen = () => {
             </Text>
             <View style={styles.badgeRow}>
               <View style={styles.infoChip}>
-                <Text style={styles.infoChipText}>Average match &lt; 1hr</Text>
+                <MaterialIcons name="bolt" size={14} color={colors.primary} />
+                <Text style={styles.infoChipText}>Quick match</Text>
               </View>
               <View style={styles.infoChip}>
+                <MaterialIcons name="photo-library" size={14} color={colors.primary} />
                 <Text style={styles.infoChipText}>Up to 4 photos</Text>
               </View>
             </View>
           </View>
 
           <View style={styles.formCard}>
-            <Text style={styles.sectionTitle}>Job details</Text>
+            <Text style={styles.sectionTitle}>Job Details</Text>
             <Text style={styles.sectionSubtitle}>
               Provide the essentials. Clear details lead to better applicants.
             </Text>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>Job title</Text>
+              <View style={styles.inputLabelRow}>
+                <MaterialIcons name="work-outline" size={16} color={colors.textSecondary} />
+                <Text style={styles.inputLabel}>Job Title</Text>
+              </View>
               <CustomInput
                 control={control}
                 name="title"
@@ -154,28 +159,37 @@ const PostJobScreen = () => {
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>Budget</Text>
+              <View style={styles.inputLabelRow}>
+                <MaterialIcons name="attach-money" size={16} color={colors.textSecondary} />
+                <Text style={styles.inputLabel}>Budget</Text>
+              </View>
               <CustomInput
                 control={control}
                 name="pay"
-                placeholder="Pay (Cash)"
+                placeholder="Enter amount (e.g. 50)"
                 error={errors.pay?.message}
                 keyboardType="numeric"
               />
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>Location</Text>
+              <View style={styles.inputLabelRow}>
+                <MaterialIcons name="location-on" size={16} color={colors.textSecondary} />
+                <Text style={styles.inputLabel}>Location</Text>
+              </View>
               <CustomInput
                 control={control}
                 name="address"
-                placeholder="Address"
+                placeholder="Street address or area"
                 error={errors.address?.message}
               />
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>Description</Text>
+              <View style={styles.inputLabelRow}>
+                <MaterialIcons name="description" size={16} color={colors.textSecondary} />
+                <Text style={styles.inputLabel}>Description</Text>
+              </View>
               <CustomInput
                 control={control}
                 name="description"
@@ -185,23 +199,43 @@ const PostJobScreen = () => {
                 numberOfLines={4}
               />
             </View>
-            <View style={styles.fieldGroup}>
-              <Text style={styles.inputLabel}>Category</Text>
 
+            <View style={styles.fieldGroup}>
+              <View style={styles.inputLabelRow}>
+                <MaterialIcons name="category" size={16} color={colors.textSecondary} />
+                <Text style={styles.inputLabel}>Category</Text>
+              </View>
               <Controller
                 control={control}
                 name="category"
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
-                    style={styles.dropdown}
+                    style={[
+                      styles.dropdown,
+                      isFocused && styles.dropdownFocused,
+                    ]}
                     data={categoryData}
                     labelField="label"
                     valueField="value"
-                    placeholder="Select category"
-                    placeholderStyle={{ color: colors.textSecondary }}
-                    iconStyle={{ tintColor: colors.textSecondary }}
+                    placeholder="Select a category"
+                    placeholderStyle={styles.dropdownPlaceholder}
+                    selectedTextStyle={styles.dropdownSelectedText}
+                    iconStyle={styles.dropdownIcon}
                     value={value}
-                    onChange={(item) => onChange(item.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onChange={(item) => {
+                      onChange(item.value);
+                      setIsFocused(false);
+                    }}
+                    renderLeftIcon={() => (
+                      <MaterialCommunityIcons
+                        name="shape-outline"
+                        size={18}
+                        color={colors.textSecondary}
+                        style={{ marginRight: 10 }}
+                      />
+                    )}
                   />
                 )}
               />
@@ -213,13 +247,19 @@ const PostJobScreen = () => {
 
           <View style={styles.formCard}>
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionTitle}>Visual references</Text>
+              <Text style={styles.sectionTitle}>Photos</Text>
               <Text style={styles.sectionCount}>{uploadedCount}/4</Text>
             </View>
             <Text style={styles.sectionSubtitle}>
-              Upload inspiration or on-site photos so professionals know what to
-              expect.
+              Add photos to help professionals understand the job better.
             </Text>
+
+            <View style={styles.tipCard}>
+              <Ionicons name="bulb-outline" size={18} color={colors.info} />
+              <Text style={styles.tipText}>
+                Jobs with photos get 3x more responses. Show the work area, materials, or examples of what you need.
+              </Text>
+            </View>
 
             <View style={styles.imageGrid}>
               <View style={styles.imageRow}>
@@ -232,7 +272,6 @@ const PostJobScreen = () => {
                     setLoadingImage={(loading) => {
                       handleLoading(index, loading);
                     }}
-                    stylesContainer={index === 0 ? { marginRight: 12 } : {}}
                     onDeleteImage={() => {
                       handleDelete(index);
                     }}
@@ -249,7 +288,6 @@ const PostJobScreen = () => {
                     setLoadingImage={(loading) => {
                       handleLoading(index, loading);
                     }}
-                    stylesContainer={index === 2 ? { marginRight: 12 } : {}}
                     onDeleteImage={() => {
                       handleDelete(index);
                     }}
@@ -272,18 +310,15 @@ const PostJobScreen = () => {
           if (selectedIndex !== null) {
             setImages((prev) => {
               const updated = [...prev];
-              // If slot is empty, insert image
               if (!updated[selectedIndex]) {
                 updated[selectedIndex] = newImage;
                 return updated;
               } else {
-                // Replace image at index
                 updated[selectedIndex] = newImage;
                 return updated;
               }
             });
           } else {
-            // If no index selected, append to end (up to 4)
             setImages((prev) => {
               if (prev.length < 4) {
                 return [...prev, newImage];
