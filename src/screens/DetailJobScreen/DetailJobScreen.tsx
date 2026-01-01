@@ -31,6 +31,8 @@ import { RootState } from "@/src/redux/store";
 type DetailJobRouteProp = RouteProp<RootStackParamList, "DetailJob">;
 
 const DetailJobScreen = () => {
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  console.log("🚀 ~ DetailJobScreen ~ accessToken:", !accessToken);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<DetailJobRouteProp>();
   const userId = useSelector((state: RootState) => state.auth.userId);
@@ -173,9 +175,13 @@ const DetailJobScreen = () => {
       {userId !== job?.userId && (
         <View style={styles.ctaContainer}>
           <TouchableOpacity
-            style={styles.chatButton}
+            style={[
+              styles.chatButton,
+              !accessToken && { backgroundColor: "#cccccc" },
+            ]}
             activeOpacity={0.9}
             onPress={handleChatPress}
+            disabled={!accessToken}
           >
             <AntDesign name="message" size={24} color={colors.surface} />
             <Text style={styles.chatButtonText}>Chat about this job</Text>
