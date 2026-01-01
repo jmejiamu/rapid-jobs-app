@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   // Main Container
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: "white",
   },
 
   // Header Section
@@ -349,33 +349,24 @@ export const styles = StyleSheet.create({
   // Not Logged In State
   notLoggedInContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     paddingHorizontal: 32,
   },
 
   notLoggedInIconContainer: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: colors.background,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 32,
   },
 
   notLoggedInTitle: {
-    fontSize: fontSize.xl,
+    fontSize: fontSize.xxl + 15,
     fontWeight: "700",
     color: colors.textPrimary,
-    marginBottom: 12,
-    textAlign: "center",
   },
 
   notLoggedInDescription: {
     fontSize: fontSize.sm,
     color: colors.textSecondary,
-    textAlign: "center",
     lineHeight: 24,
     marginBottom: 32,
   },
@@ -383,10 +374,11 @@ export const styles = StyleSheet.create({
   notLoggedInButtons: {
     width: "100%",
     gap: 12,
+    marginBottom: 32,
   },
 
   loginButton: {
-    borderRadius: 12,
+    borderRadius: 28,
     shadowColor: colors.primary,
     shadowOffset: {
       width: 0,
@@ -398,7 +390,10 @@ export const styles = StyleSheet.create({
   },
 
   registerButton: {
-    borderRadius: 12,
+    borderRadius: 28,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: colors.primary,
   },
 
   // Footer Spacing

@@ -16,7 +16,7 @@ import { usePagination } from "@/src/hooks";
 import { colors } from "@/src/theme/colors";
 import { styles } from "./styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import { ImageBackground } from "expo-image";
+import { Image, ImageBackground } from "expo-image";
 
 const ProfileScreen = () => {
   const { data, loading, loadingMore, fetchData, counts } =
@@ -128,16 +128,35 @@ const ProfileScreen = () => {
 
   if (!isLoggedIn) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.notLoggedInContainer}>
+      <SafeAreaView edges={["top"]} style={styles.container}>
+        <LinearGradient
+          colors={["rgba(44, 129, 255, 1)", "transparent"]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+
+            height: "60%",
+          }}
+          pointerEvents="none"
+        />
+        <View style={[styles.notLoggedInContainer]}>
           <View style={styles.notLoggedInIconContainer}>
-            <MaterialIcons
-              name="person-outline"
-              size={80}
-              color={colors.textSecondary}
+            <Image
+              source={require("../../../assets/logo-img.png")}
+              style={{
+                width: 140,
+                height: 140,
+                borderRadius: 140 / 2,
+              }}
             />
           </View>
-          <Text style={styles.notLoggedInTitle}>Welcome to Rapid Jobs</Text>
+          <Text style={[styles.notLoggedInTitle, { color: "#425065ff" }]}>
+            Welcome to{" "}
+          </Text>
+          <Text style={[styles.notLoggedInTitle, { color: "#316abaff" }]}>
+            Rapid Jobs
+          </Text>
           <Text style={styles.notLoggedInDescription}>
             Please register or log in to view your profile, post job ads, and
             apply for jobs.
@@ -146,15 +165,18 @@ const ProfileScreen = () => {
             <MainButton
               title="Log In"
               onPress={() => navigation.navigate("Login")}
-              size="md"
+              size="lg"
               style={styles.loginButton}
             />
             <MainButton
               title="Register"
-              variant="text"
+              // variant="text"
               onPress={() => navigation.navigate("Register")}
-              size="md"
+              size="lg"
               style={styles.registerButton}
+              textStyle={{
+                color: "#355e8aff",
+              }}
             />
           </View>
         </View>

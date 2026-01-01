@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import { PhoneInput } from "react-native-phone-entry";
@@ -24,6 +24,8 @@ import { MainButton } from "@/src/components";
 import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
 import { API_URL } from "@/config/api";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 
 const schema = z.object({
   phone: z
@@ -99,13 +101,10 @@ const LoginScreen = () => {
           </TouchableOpacity>
 
           <View style={styles.heroSection}>
-            <View style={styles.iconCircle}>
-              <MaterialCommunityIcons
-                name="briefcase-check"
-                size={40}
-                color={colors.primary}
-              />
-            </View>
+            <Image
+              source={require("../../../assets/logo-img.png")}
+              style={{ width: 90, height: 90, borderRadius: 90 / 2 }}
+            />
             <Text style={styles.title}>Welcome Back</Text>
             <Text style={styles.subtitle}>
               Enter your phone number to continue

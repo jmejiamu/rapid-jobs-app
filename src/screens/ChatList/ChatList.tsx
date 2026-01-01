@@ -24,6 +24,8 @@ import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { Rooms } from "@/src/types/Rooms";
 import { MainButton } from "@/src/components";
 import { apiFetch } from "@/src/utils/apiFetch";
+import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "expo-image";
 
 const ChatList = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -144,35 +146,59 @@ const ChatList = () => {
 
   if (!accessToken) {
     return (
-      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Messages</Text>
+      <SafeAreaView edges={["top"]} style={styles.safeArea}>
+        <LinearGradient
+          colors={["rgba(44, 129, 255, 1)", "transparent"]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+
+            height: "60%",
+          }}
+          pointerEvents="none"
+        />
+        <View style={styles.containerNoLogIn}>
+          <View style={styles.stateContainerNoLogIn}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={require("../../../assets/logo-img.png")}
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderRadius: 140 / 2,
+                }}
+              />
+            </View>
+
+            <Text style={[styles.title, { color: "#425065ff" }]}>
+              Messages{" "}
+            </Text>
             <Text style={styles.subtitle}>
-              Please log in to view your conversations.
+              Logging in allows you to stay connected with applicants and
+              clients.
             </Text>
-          </View>
-          <View style={styles.stateContainer}>
-            <AntDesign
-              name="user"
-              size={42}
-              color={colors.textSecondary}
-              style={styles.stateIcon}
-            />
-            <Text style={styles.stateTitle}>You're not logged in</Text>
-            <Text style={styles.stateSubtitle}>
-              Log in or register to start chatting.
-            </Text>
+
             <View style={styles.buttonContainer}>
               <MainButton
                 title="Log In"
+                size="lg"
                 onPress={() => navigation.navigate("Login")}
+                style={styles.loginButton}
               />
 
               <MainButton
                 title="Register"
                 variant="secondary"
+                size="lg"
                 onPress={() => navigation.navigate("Register")}
+                style={styles.registerButton}
               />
             </View>
           </View>
@@ -252,19 +278,23 @@ export default ChatList;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: "white",
   },
   container: {
     flex: 1,
     paddingHorizontal: 20,
     paddingBottom: 16,
   },
+  containerNoLogIn: {
+    flex: 1,
+    paddingBottom: 32,
+  },
   header: {
     paddingVertical: 24,
     gap: 6,
   },
   title: {
-    fontSize: fontSize.xl,
+    fontSize: fontSize.xxl + 15,
     fontWeight: "700",
     color: colors.textPrimary,
   },
@@ -331,9 +361,12 @@ const styles = StyleSheet.create({
   },
   stateContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     paddingHorizontal: 24,
+    gap: 12,
+  },
+  stateContainerNoLogIn: {
+    flex: 1,
+    paddingHorizontal: 32,
     gap: 12,
   },
   stateIcon: {
@@ -362,15 +395,12 @@ const styles = StyleSheet.create({
     color: "white",
   },
   buttonContainer: {
-    flexDirection: "row",
+    // flexDirection: "row",
     gap: 12,
     marginTop: 8,
   },
   loginButton: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 28,
     backgroundColor: colors.primary,
     alignItems: "center",
   },
@@ -380,14 +410,10 @@ const styles = StyleSheet.create({
     color: "white",
   },
   registerButton: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 28,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.primary,
-    alignItems: "center",
   },
   registerButtonText: {
     fontSize: fontSize.sm,
