@@ -4,6 +4,8 @@ import { Image } from "expo-image";
 
 import { PostJobType } from "@/src/types/postjob";
 import { styles } from "./styles/styles";
+import { fontSize } from "@/src/theme/fontStyle";
+import { AntDesign } from "@expo/vector-icons";
 
 export const JobCard = ({
   job,
@@ -36,12 +38,23 @@ export const JobCard = ({
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{job.title}</Text>
-      <Text style={styles.pay}>Pay ${job.pay}</Text>
-      <Text style={styles.dateTime}>Date/time - {formatDateTime()}</Text>
-      {job.address && (
-        <Text style={styles.address}>address - {job.address}</Text>
+      {job.userId && typeof job.userId !== "string" && (
+        <View style={styles.headerContainer}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            <View style={styles.avatarContainer}>
+              <Text>{job.userId.name.charAt(0).toUpperCase()}</Text>
+            </View>
+            <Text style={styles.userName}>{job.userId.name}</Text>
+          </View>
+          <View style={styles.ratingContainer}>
+            <Text style={styles.averageRatingText}>
+              {Math.round(job.userId.averageRating * 10) / 10}
+            </Text>
+            <AntDesign name="star" size={16} color="#fedb15ff" />
+          </View>
+        </View>
       )}
+
       {/* Display images if available */}
       {Array.isArray(job.images) && job.images.length > 0 && (
         <View style={styles.rowContainer}>
@@ -63,6 +76,14 @@ export const JobCard = ({
             ))}
         </View>
       )}
+
+      <Text style={styles.title}>{job.title}</Text>
+      <Text style={styles.pay}>Pay ${job.pay}</Text>
+      <Text style={styles.dateTime}>Date/time - {formatDateTime()}</Text>
+      {job.address && (
+        <Text style={styles.address}>address - {job.address}</Text>
+      )}
+
       <View style={{ flexDirection: "row" }}>
         {rightElement && (
           <View style={styles.rightElement}>{rightElement}</View>
