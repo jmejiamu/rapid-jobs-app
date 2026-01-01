@@ -6,7 +6,6 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import React from "react";
 import {
@@ -32,7 +31,6 @@ type DetailJobRouteProp = RouteProp<RootStackParamList, "DetailJob">;
 
 const DetailJobScreen = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  console.log("🚀 ~ DetailJobScreen ~ accessToken:", !accessToken);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<DetailJobRouteProp>();
   const userId = useSelector((state: RootState) => state.auth.userId);
