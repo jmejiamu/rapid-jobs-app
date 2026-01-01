@@ -19,7 +19,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { RootStackParamList } from "@/src/navigation/RootNavigator";
 import { EmptyState } from "@/src/components";
 import { colors } from "@/src/theme/colors";
@@ -52,6 +52,7 @@ type Job = {
 };
 
 const ApplicationApproved = () => {
+  const userId = useSelector((state: RootState) => state.auth.userId);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [markingId, setMarkingId] = useState<string | null>(null);
@@ -150,7 +151,10 @@ const ApplicationApproved = () => {
               ]}
             />
             <Text
-              style={[styles.statusText, { color: getStatusColor(item.status) }]}
+              style={[
+                styles.statusText,
+                { color: getStatusColor(item.status) },
+              ]}
             >
               {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
             </Text>
@@ -164,7 +168,11 @@ const ApplicationApproved = () => {
 
         {item.address ? (
           <View style={styles.addressRow}>
-            <MaterialIcons name="location-on" size={16} color={colors.textSecondary} />
+            <MaterialIcons
+              name="location-on"
+              size={16}
+              color={colors.textSecondary}
+            />
             <Text style={styles.address}>{item.address}</Text>
           </View>
         ) : null}
@@ -186,7 +194,9 @@ const ApplicationApproved = () => {
             </View>
             <View style={styles.assignedDetails}>
               <Text style={styles.assignedLabel}>Assigned to</Text>
-              <Text style={styles.assignedName}>{item.assignedTo.name}</Text>
+              <Text style={styles.assignedName}>
+                {item.assignedTo._id === userId ? "Me" : item.assignedTo.name}
+              </Text>
             </View>
           </View>
         )}

@@ -3,7 +3,9 @@ import { z } from "zod";
 import { schema } from "../screens/PostJobScreen/schema/formSchema";
 import { ImageObject } from "./imgUploader";
 
-export type UserIdType = string | { _id: string; name: string };
+export type UserIdType =
+  | string
+  | { _id: string; name: string; averageRating: number; reviewsCount: number };
 
 export interface PostJobType extends z.infer<typeof schema> {
   _id?: string; //This is the post id
@@ -28,6 +30,8 @@ export interface RequestedJob extends PostJobType {
   userId: {
     _id: string;
     name: string;
+    averageRating: number;
+    reviewsCount: number;
   };
   ownerPostId: string;
   status: string;

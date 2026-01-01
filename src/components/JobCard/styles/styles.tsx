@@ -17,13 +17,13 @@ export const styles = StyleSheet.create({
     borderColor: colors.background,
   },
   title: {
-    fontSize: fontSize.lg,
+    fontSize: fontSize.sm,
     fontWeight: "bold",
     color: colors.primary,
     marginBottom: 4,
   },
   pay: {
-    fontSize: fontSize.md,
+    fontSize: fontSize.sm,
     color: colors.success,
     marginBottom: 4,
     fontWeight: "600",
@@ -75,5 +75,39 @@ export const styles = StyleSheet.create({
   },
   leftElement: {
     flex: 1,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  avatarContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    backgroundColor: "#83bdf4ff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#2b659bff",
+  },
+  userName: {
+    fontSize: fontSize.sm,
+    color: "#2b659bff",
+    fontWeight: "bold",
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#eef3f5ff",
+    padding: 5,
+    borderRadius: 5,
+  },
+  averageRatingText: {
+    fontSize: fontSize.sm,
+    color: "#555",
+    fontWeight: "bold",
+    marginRight: 5,
   },
 });
