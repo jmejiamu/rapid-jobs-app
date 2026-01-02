@@ -143,11 +143,10 @@ const ProfileScreen = () => {
         <View style={[styles.notLoggedInContainer]}>
           <View style={styles.notLoggedInIconContainer}>
             <Image
-              source={require("../../../assets/logo-img.png")}
+              source={require("../../../assets/logo-img-no-bg.png")}
               style={{
-                width: 140,
-                height: 140,
-                borderRadius: 140 / 2,
+                width: 350,
+                height: 350,
               }}
             />
           </View>

@@ -25,7 +25,6 @@ import { colors } from "@/src/theme/colors";
 import { fontSize } from "@/src/theme/fontStyle";
 import { API_URL } from "@/config/api";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
 
 const schema = z.object({
   phone: z
@@ -102,8 +101,8 @@ const LoginScreen = () => {
 
           <View style={styles.heroSection}>
             <Image
-              source={require("../../../assets/logo-img.png")}
-              style={{ width: 90, height: 90, borderRadius: 90 / 2 }}
+              source={require("../../../assets/logo-img-no-bg.png")}
+              style={{ width: 100, height: 100 }}
             />
             <Text style={styles.title}>Welcome Back</Text>
             <Text style={styles.subtitle}>
@@ -207,7 +206,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: "#E0E0E0",
-    borderRadius: 12,
+    borderRadius: 28,
     height: 54,
   },
   phoneInputText: {
@@ -220,7 +219,7 @@ const styles = StyleSheet.create({
     marginTop: -8,
   },
   submitButton: {
-    borderRadius: 12,
+    borderRadius: 28,
     height: 54,
   },
   footer: {
