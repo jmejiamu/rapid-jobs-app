@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   RefreshControl,
+  Alert,
 } from "react-native";
 import io from "socket.io-client";
 
@@ -48,6 +49,7 @@ const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [requestJobLoading, setRequestJobLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const filters = [
     "All",
@@ -61,6 +63,7 @@ const HomeScreen: React.FC = () => {
   ];
 
   const requestJobs = async (jobId: string) => {
+    setRequestJobLoading(true);
     try {
       const response = await fetch(`${API_URL}/jobs/request-job/${jobId}`, {
         method: "POST",
@@ -70,8 +73,16 @@ const HomeScreen: React.FC = () => {
       });
 
       const job = await response.json();
+      if (response.ok) {
+        Alert.alert("Success", "Job requested successfully.");
+        setRequestJobLoading(false);
+      } else {
+        Alert.alert("Request", job.error || "Failed to request the job.");
+        setRequestJobLoading(false);
+      }
     } catch (error) {
       console.error("Error fetching job details:", error);
+      setRequestJobLoading(false);
     }
   };
 
@@ -243,6 +254,8 @@ const HomeScreen: React.FC = () => {
                   <MainButton
                     title="Do this job"
                     size="sm"
+                    loading={requestJobLoading}
+                    disabled={requestJobLoading}
                     onPress={() => {
                       if (item?._id) {
                         requestJobs(item._id);
